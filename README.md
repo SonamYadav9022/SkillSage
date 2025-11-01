@@ -1,3 +1,9 @@
+<<<<<<< HEAD
+=======
+# SkillSage
+SkillSage: AI-Powered Adaptive Career Roadmap Generator. Transforms resumes into personalized skill gap analyses and visual roadmaps with dynamic course recommendations.
+
+>>>>>>> 2acf00503cf73afca7e702ebc6f7212046a52ef9
 # 🚀 Welcome to SkillSage - The adaptive Career Roadmap Generator
 
 A modern, production-ready web application scaffold powered by cutting-edge technologies, designed to accelerate the development of the SkillSage platform.
@@ -101,4 +107,8 @@ Database: Type-safe database operations with Prisma for Career Ontology Manageme
 API Client: HTTP requests with Axios + TanStack Query for FastAPI/AI communication.
 
 
+<<<<<<< HEAD
 Ready to build the future of career guidance? Start building SkillSage now!
+=======
+Ready to build the future of career guidance? Start building SkillSage now!
+>>>>>>> 2acf00503cf73afca7e702ebc6f7212046a52ef9
