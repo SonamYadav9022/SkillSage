@@ -1,0 +1,95 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id          String   @id @default(cuid())
+  email       String   @unique
+  name        String?
+  experience  String?  // College Student, Recent Graduate, etc.
+  education   String?  // Field of study
+  resumeUrl   String?  // URL to uploaded resume
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  // Relations
+  roadmaps    Roadmap[]
+  progress    Progress[]
+  
+  @@map("users")
+}
+
+model Roadmap {
+  id          String   @id @default(cuid())
+  userId      String
+  title       String
+  goal        String   // Career goal
+  duration    String   // 3 months, 6 months, etc.
+  status      String   @default("active") // active, completed, paused
+  milestones  Json     // Store milestones as JSON
+  recommendations Json // Store recommendations as JSON
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  // Relations
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  progress    Progress[]
+  
+  @@map("roadmaps")
+}
+
+model Progress {
+  id            String   @id @default(cuid())
+  userId        String
+  roadmapId     String
+  weekNumber    Int
+  goal          String   // Weekly goal
+  targetHours   Int      @default(10)
+  actualHours   Int      @default(0)
+  completed     Boolean  @default(false)
+  notes         String?  // User notes about the week
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  
+  // Relations
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  roadmap       Roadmap  @relation(fields: [roadmapId], references: [id], onDelete: Cascade)
+  
+  @@unique([userId, roadmapId, weekNumber])
+  @@map("progress")
+}
+
+model Skill {
+  id          String   @id @default(cuid())
+  name        String   @unique
+  category    String   // technical, soft, domain-specific
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  @@map("skills")
+}
+
+model UserSkill {
+  id          String   @id @default(cuid())
+  userId      String
+  skillId     String
+  level       String   // beginner, intermediate, advanced, expert
+  verified    Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  @@unique([userId, skillId])
+  @@map("user_skills")
+}
