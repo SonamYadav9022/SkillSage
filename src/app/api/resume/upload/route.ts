@@ -1,121 +1,199 @@
-import { NextRequest, NextResponse } from 'next/server'
-import { db } from '@/lib/db'
-import ZAI from 'z-ai-web-dev-sdk'
+import { NextRequest, NextResponse } from "next/server";
+import { v2 as cloudinary } from "cloudinary";
+import { db } from "@/lib/db";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth";
 
-export async function POST(request: NextRequest) {
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
+
+export async function POST(req: NextRequest) {
   try {
-    const formData = await request.formData()
-    const file = formData.get('resume') as File
-    const userId = formData.get('userId') as string
-    const manualSkills = formData.get('manualSkills') as string
+    const session = await getServerSession(
+      authOptions
+    );
 
-    if (!file && !manualSkills) {
-      return NextResponse.json({ error: 'No file or manual skills provided' }, { status: 400 })
+    if (!session?.user?.email) {
+      return NextResponse.json(
+        { error: "Unauthorized" },
+        { status: 401 }
+      );
     }
 
-    let extractedSkills: string[] = []
+    const formData =
+      await req.formData();
 
-    if (file) {
-      // Process uploaded file
-      const bytes = await file.arrayBuffer()
-      const buffer = Buffer.from(bytes)
-      
-      // Here you would typically parse the PDF/DOC file
-      // For now, we'll use AI to extract skills from the filename and simulate parsing
-      try {
-        const zai = await ZAI.create()
-        
-        const prompt = `Extract technical and professional skills from this resume filename: ${file.name}. 
-        Also suggest common skills for a college student resume. Return as a JSON array of skill strings.`
-        
-        const completion = await zai.chat.completions.create({
-          messages: [
-            {
-              role: 'system',
-              content: 'You are a resume parsing assistant. Extract skills and return them as a JSON array.'
-            },
-            {
-              role: 'user',
-              content: prompt
-            }
-          ],
-        })
+    const file =
+      formData.get(
+        "resume"
+      ) as File;
 
-        const skillsText = completion.choices[0]?.message?.content || '[]'
-        extractedSkills = JSON.parse(skillsText)
-      } catch (error) {
-        console.error('AI parsing failed:', error)
-        // Fallback to mock skills
-        extractedSkills = ['JavaScript', 'React', 'Node.js', 'Python', 'Git', 'Communication']
-      }
-    } else if (manualSkills) {
-      extractedSkills = manualSkills.split(',').map(s => s.trim()).filter(s => s)
+    if (!file) {
+      return NextResponse.json(
+        {
+          error:
+            "No file selected",
+        },
+        { status: 400 }
+      );
     }
 
-    // Create or update user
-    let user = await db.user.findFirst({
-      where: { email: `user_${Date.now()}@example.com` } // Temporary email handling
-    })
+    const allowed = [
+      "application/pdf",
+      "application/msword",
+      "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+    ];
 
-    if (!user) {
-      user = await db.user.create({
-        data: {
-          email: `user_${Date.now()}@example.com`,
-          name: 'Student User',
-          experience: 'College Student',
-          education: 'Computer Science'
-        }
-      })
+    if (
+      !allowed.includes(
+        file.type
+      )
+    ) {
+      return NextResponse.json(
+        {
+          error:
+            "Only PDF, DOC, DOCX allowed",
+        },
+        { status: 400 }
+      );
     }
 
-    // Store skills in database
-    for (const skillName of extractedSkills) {
-      let skill = await db.skill.findFirst({
-        where: { name: skillName }
-      })
+    if (
+      file.size >
+      2 *
+        1024 *
+        1024
+    ) {
+      return NextResponse.json(
+        {
+          error:
+            "Max file size is 2MB",
+        },
+        { status: 400 }
+      );
+    }
 
-      if (!skill) {
-        skill = await db.skill.create({
-          data: {
-            name: skillName,
-            category: 'technical',
-            description: `Skill in ${skillName}`
-          }
-        })
-      }
+    /* ---------- FIND USER ---------- */
 
-      // Link skill to user
-      await db.userSkill.upsert({
+    const existingUser =
+      await db.user.findUnique({
         where: {
-          userId_skillId: {
-            userId: user.id,
-            skillId: skill.id
+          email:
+            session.user.email,
+        },
+      });
+
+    /* ---------- DELETE OLD FILE FIRST ---------- */
+
+    if (
+      existingUser?.resumeUrl
+    ) {
+      try {
+        const parts =
+          existingUser.resumeUrl.split(
+            "/"
+          );
+
+        const fileName =
+          parts[
+            parts.length - 1
+          ];
+
+        const publicId =
+          "skillsage_resumes/" +
+          fileName.split(
+            "."
+          )[0];
+
+        await cloudinary.uploader.destroy(
+          publicId,
+          {
+            resource_type:
+              "raw",
           }
-        },
-        update: {
-          level: 'intermediate'
-        },
-        create: {
-          userId: user.id,
-          skillId: skill.id,
-          level: 'intermediate'
-        }
-      })
+        );
+      } catch (err) {
+        console.log(
+          "Old file delete skipped"
+        );
+      }
     }
+
+    /* ---------- UPLOAD NEW ---------- */
+
+    const bytes =
+      await file.arrayBuffer();
+
+    const buffer =
+      Buffer.from(bytes);
+
+    const uploadRes: any =
+      await new Promise(
+        (
+          resolve,
+          reject
+        ) => {
+          cloudinary.uploader
+            .upload_stream(
+              {
+                resource_type:
+                  "raw",
+                folder:
+                  "skillsage_resumes",
+              },
+              (
+                error,
+                result
+              ) => {
+                if (
+                  error
+                )
+                  reject(
+                    error
+                  );
+                else
+                  resolve(
+                    result
+                  );
+              }
+            )
+            .end(buffer);
+        }
+      );
+
+    /* ---------- SAVE DB ---------- */
+
+    const user =
+      await db.user.update({
+        where: {
+          email:
+            session.user.email,
+        },
+        data: {
+          resumeUrl:
+            uploadRes.secure_url,
+        },
+      });
 
     return NextResponse.json({
       success: true,
-      userId: user.id,
-      currentSkills: extractedSkills,
-      experience: user.experience,
-      education: user.education
-    })
-
+      url: uploadRes.secure_url,
+      publicId:
+        uploadRes.public_id,
+      user,
+    });
   } catch (error) {
-    console.error('Resume upload error:', error)
+    console.log(error);
+
     return NextResponse.json(
-      { error: 'Failed to process resume' },
+      {
+        error:
+          "Upload failed",
+      },
       { status: 500 }
-    )
+    );
   }
 }

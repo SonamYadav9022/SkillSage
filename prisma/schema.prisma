@@ -14,19 +14,47 @@ datasource db {
 }
 
 model User {
-  id          String   @id @default(cuid())
-  email       String   @unique
-  name        String?
-  experience  String?  // College Student, Recent Graduate, etc.
-  education   String?  // Field of study
-  resumeUrl   String?  // URL to uploaded resume
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  
-  // Relations
-  roadmaps    Roadmap[]
-  progress    Progress[]
-  
+  id              String   @id @default(cuid())
+  email           String   @unique
+  password        String
+  name            String?
+
+  userCode        String?  @unique
+
+  experience      String?
+  education       String?
+
+  manualSkills    String?
+  skills          String?
+  goal            String?
+
+  tenthMarks      String?
+  twelfthMarks    String?
+  cgpa            String?
+
+  resumeUrl       String?
+  resumePublicId  String?
+
+  profileUrl      String?
+  certificateUrl  String?
+
+  // -------------------------
+  // USER JOURNEY DATA
+  // -------------------------
+  selectedCourse  String?
+  selectedDuration String?
+  activeTab       String?
+
+  roadmapData     Json?
+  progressData    Json?
+
+  // -------------------------
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  roadmaps        Roadmap[]
+  progress        Progress[]
+
   @@map("users")
 }
 
