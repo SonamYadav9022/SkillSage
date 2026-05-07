@@ -1,220 +1,476 @@
-'use client'
+"use client";
 
-import { useState, useCallback } from 'react'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Badge } from '@/components/ui/badge'
-import { Upload, FileText, X, CheckCircle } from 'lucide-react'
+import {
+  useState,
+  useCallback,
+  useRef,
+  useEffect,
+} from "react";
+
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+
+import {
+  Upload,
+  FileText,
+  X,
+  CheckCircle,
+  Eye,
+} from "lucide-react";
 
 interface ResumeUploadProps {
-  onUpload: (data: any) => void
+  onUpload: (data: any) => void;
+  savedData?: any;
+  onReset?: () => void;
 }
 
-export default function ResumeUpload({ onUpload }: ResumeUploadProps) {
-  const [isDragging, setIsDragging] = useState(false)
-  const [uploadedFile, setUploadedFile] = useState<File | null>(null)
-  const [isProcessing, setIsProcessing] = useState(false)
-  const [extractedSkills, setExtractedSkills] = useState<string[]>([])
+export default function ResumeUpload({
+  onUpload,
+  savedData,
+  onReset,
+}: ResumeUploadProps) {
+  const [isDragging, setIsDragging] =
+    useState(false);
 
-  const handleDragOver = useCallback((e: React.DragEvent) => {
-    e.preventDefault()
-    setIsDragging(true)
-  }, [])
+  const [uploadedFile, setUploadedFile] =
+    useState<any>(null);
 
-  const handleDragLeave = useCallback((e: React.DragEvent) => {
-    e.preventDefault()
-    setIsDragging(false)
-  }, [])
+  const [isProcessing, setIsProcessing] =
+    useState(false);
 
-  const handleDrop = useCallback((e: React.DragEvent) => {
-    e.preventDefault()
-    setIsDragging(false)
-    
-    const files = Array.from(e.dataTransfer.files)
-    const file = files.find(f => f.type === 'application/pdf' || f.type === 'application/msword' || f.type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document')
-    
-    if (file) {
-      handleFileUpload(file)
+  const [msg, setMsg] = useState("");
+
+  const [skills, setSkills] =
+    useState("");
+
+  const [goal, setGoal] =
+    useState("");
+
+  const [experience, setExperience] =
+    useState("College Student");
+
+  const abortRef =
+    useRef<AbortController | null>(null);
+
+  /* ---------- AUTO LOAD SAVED USER DATA ---------- */
+
+  useEffect(() => {
+    if (!savedData) return;
+
+    if (savedData.resume) {
+      setUploadedFile(savedData.resume);
+    } else if (savedData.resumeUrl) {
+      setUploadedFile({
+        name: "Uploaded Resume",
+        url: savedData.resumeUrl,
+        size: 0,
+      });
     }
-  }, [])
 
-  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0]
+    setSkills(
+      savedData.manualSkills ||
+        savedData.skills?.join(", ") ||
+        ""
+    );
+
+    setGoal(savedData.goal || "");
+
+    setExperience(
+      savedData.experience ||
+        "College Student"
+    );
+  }, [savedData]);
+
+  const handleDragOver =
+    useCallback(
+      (e: React.DragEvent) => {
+        e.preventDefault();
+        setIsDragging(true);
+      },
+      []
+    );
+
+  const handleDragLeave =
+    useCallback(
+      (e: React.DragEvent) => {
+        e.preventDefault();
+        setIsDragging(false);
+      },
+      []
+    );
+
+  const handleDrop = useCallback(
+    (e: React.DragEvent) => {
+      e.preventDefault();
+      setIsDragging(false);
+
+      const file =
+        e.dataTransfer.files?.[0];
+
+      if (file) {
+        handleFileUpload(file);
+      }
+    },
+    []
+  );
+
+  const handleFileSelect = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const file =
+      e.target.files?.[0];
+
     if (file) {
-      handleFileUpload(file)
+      handleFileUpload(file);
     }
-  }
+  };
 
-  const handleFileUpload = async (file: File) => {
-    setUploadedFile(file)
-    setIsProcessing(true)
-    
-    // Simulate resume processing
-    setTimeout(() => {
-      const mockSkills = [
-        'JavaScript', 'React', 'Node.js', 'HTML', 'CSS', 
-        'Python', 'Git', 'MongoDB', 'Express.js', 'TypeScript',
-        'Problem Solving', 'Team Collaboration', 'Project Management'
-      ]
-      setExtractedSkills(mockSkills)
-      setIsProcessing(false)
-    }, 2000)
-  }
+  const handleFileUpload = async (
+    file: File
+  ) => {
+    setMsg("");
 
-  const handleConfirmUpload = () => {
+    const allowed = [
+      "application/pdf",
+      "application/msword",
+      "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+    ];
+
+    if (!allowed.includes(file.type)) {
+      setMsg(
+        "Only PDF, DOC, DOCX files allowed."
+      );
+      return;
+    }
+
+    if (file.size > 1024 * 1024) {
+      setMsg("Max file size is 1MB.");
+      return;
+    }
+
+    setUploadedFile(file);
+    setIsProcessing(true);
+
+    const formData = new FormData();
+    formData.append("resume", file);
+
+    const controller =
+      new AbortController();
+
+    abortRef.current =
+      controller;
+
+    try {
+      const res = await fetch(
+        "/api/resume/upload",
+        {
+          method: "POST",
+          body: formData,
+          signal: controller.signal,
+        }
+      );
+
+      const data =
+        await res.json();
+
+      setIsProcessing(false);
+
+      if (res.ok) {
+        setMsg(
+          "Resume uploaded successfully!"
+        );
+
+        const fileData = {
+          name: file.name,
+          size: file.size,
+          url: data.url,
+        };
+
+        setUploadedFile(fileData);
+
+        onUpload({
+          resume: fileData,
+          resumeUrl: data.url,
+          manualSkills: skills,
+          goal,
+          experience,
+        });
+      } else {
+        setMsg(
+          data.error ||
+            "Upload failed."
+        );
+      }
+    } catch {
+      setIsProcessing(false);
+      setMsg("Upload failed.");
+    }
+  };
+
+  const removeFile = async () => {
+    if (abortRef.current) {
+      abortRef.current.abort();
+    }
+
+    await fetch(
+      "/api/resume/delete",
+      {
+        method: "POST",
+      }
+    );
+
+    setUploadedFile(null);
+    setMsg(
+      "File deleted successfully."
+    );
+
+    if (onReset) onReset();
+  };
+
+  const viewFile = () => {
+    const fileUrl =
+      uploadedFile?.url ||
+      savedData?.resumeUrl;
+
+    if (fileUrl) {
+      window.open(
+        fileUrl,
+        "_blank"
+      );
+    }
+  };
+
+  const continueManual = () => {
     onUpload({
+      manualSkills: skills,
+      goal,
+      experience,
       resume: uploadedFile,
-      currentSkills: extractedSkills,
-      experience: 'College Student',
-      education: 'Computer Science'
-    })
-  }
-
-  const removeFile = () => {
-    setUploadedFile(null)
-    setExtractedSkills([])
-  }
+    });
+  };
 
   return (
     <div className="grid md:grid-cols-2 gap-6">
-      {/* Upload Area */}
-      <Card>
+      {/* LEFT */}
+      <Card className="rounded-2xl shadow-sm">
         <CardHeader>
-          <CardTitle className="flex items-center gap-2">
+          <CardTitle className="flex gap-2 items-center text-[22px]">
             <Upload className="w-5 h-5" />
             Upload Your Resume
           </CardTitle>
-          <CardDescription>
-            Upload your resume in PDF, DOC, or DOCX format to analyze your current skills
+
+          <CardDescription className="text-md">
+            Upload your resume in PDF,
+            DOC, DOCX format
           </CardDescription>
         </CardHeader>
+
         <CardContent>
           {!uploadedFile ? (
             <div
-              className={`border-2 border-dashed rounded-lg p-8 text-center transition-colors ${
-                isDragging ? 'border-blue-500 bg-blue-50' : 'border-gray-300 hover:border-gray-400'
+              className={`border-2 border-dashed rounded-2xl p-10 text-center transition ${
+                isDragging
+                  ? "border-blue-500 bg-blue-50"
+                  : "border-gray-300"
               }`}
-              onDragOver={handleDragOver}
-              onDragLeave={handleDragLeave}
+              onDragOver={
+                handleDragOver
+              }
+              onDragLeave={
+                handleDragLeave
+              }
               onDrop={handleDrop}
             >
-              <FileText className="w-12 h-12 mx-auto mb-4 text-gray-400" />
-              <p className="text-lg font-medium mb-2">Drop your resume here</p>
-              <p className="text-sm text-gray-500 mb-4">or</p>
+              <FileText className="w-14 h-14 mx-auto mb-4 text-gray-400" />
+
+              <p className="text-[22px] font-medium mb-2">
+                Drop your resume here
+              </p>
+
+              <p className="text-gray-500 mb-5">
+                or
+              </p>
+
               <label className="cursor-pointer">
-                <Input
+                <input
                   type="file"
                   accept=".pdf,.doc,.docx"
-                  onChange={handleFileSelect}
+                  onChange={
+                    handleFileSelect
+                  }
                   className="hidden"
                 />
-                <Button variant="outline">Browse Files</Button>
+
+                <span className="inline-block px-6 py-3 border rounded-xl hover:bg-gray-100 transition">
+                  Browse Files
+                </span>
               </label>
-              <p className="text-xs text-gray-400 mt-4">
-                Supported formats: PDF, DOC, DOCX (Max 10MB)
+
+              <p className="text-sm text-gray-400 mt-5">
+                Max Size: 1MB
               </p>
             </div>
           ) : (
             <div className="space-y-4">
-              <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
-                <div className="flex items-center gap-3">
+              <div className="p-4 rounded-xl bg-gray-50 flex items-center justify-between">
+                <div className="flex gap-3 items-center">
                   <FileText className="w-8 h-8 text-blue-600" />
+
                   <div>
-                    <p className="font-medium">{uploadedFile.name}</p>
+                    <p className="font-semibold">
+                      {uploadedFile.name}
+                    </p>
+
                     <p className="text-sm text-gray-500">
-                      {(uploadedFile.size / 1024 / 1024).toFixed(2)} MB
+                      {uploadedFile.size
+                        ? `${(
+                            uploadedFile.size /
+                            1024 /
+                            1024
+                          ).toFixed(
+                            1
+                          )} MB`
+                        : "Saved File"}
                     </p>
                   </div>
                 </div>
-                <Button variant="ghost" size="sm" onClick={removeFile}>
-                  <X className="w-4 h-4" />
-                </Button>
+
+                <div className="flex gap-2">
+                  <button
+                    onClick={
+                      viewFile
+                    }
+                    className="p-2 hover:bg-gray-200 rounded-lg"
+                  >
+                    <Eye className="w-4 h-4" />
+                  </button>
+
+                  <button
+                    onClick={
+                      removeFile
+                    }
+                    className="p-2 hover:bg-gray-200 rounded-lg"
+                  >
+                    <X className="w-4 h-4" />
+                  </button>
+                </div>
               </div>
-              
+
               {isProcessing ? (
-                <div className="text-center py-4">
-                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-2"></div>
-                  <p className="text-sm text-gray-600">Analyzing your resume...</p>
+                <p>Uploading...</p>
+              ) : (
+                <div className="flex gap-2 text-green-600">
+                  <CheckCircle className="w-5 h-5" />
+                  Resume Uploaded
                 </div>
-              ) : extractedSkills.length > 0 ? (
-                <div className="space-y-3">
-                  <div className="flex items-center gap-2 text-green-600">
-                    <CheckCircle className="w-5 h-5" />
-                    <span className="font-medium">Skills Extracted Successfully!</span>
-                  </div>
-                  <div className="flex flex-wrap gap-2">
-                    {extractedSkills.map((skill, index) => (
-                      <Badge key={index} variant="secondary">
-                        {skill}
-                      </Badge>
-                    ))}
-                  </div>
-                  <Button onClick={handleConfirmUpload} className="w-full">
-                    Continue to Goal Setting
-                  </Button>
-                </div>
-              ) : null}
+              )}
             </div>
+          )}
+
+          {msg && (
+            <p className="mt-4 text-sm text-blue-600">
+              {msg}
+            </p>
           )}
         </CardContent>
       </Card>
 
-      {/* Manual Entry */}
-      <Card>
+      {/* RIGHT */}
+      <Card className="rounded-2xl shadow-sm">
         <CardHeader>
-          <CardTitle>Or Enter Skills Manually</CardTitle>
-          <CardDescription>
-            Don't have a resume ready? Enter your current skills manually
+          <CardTitle className="text-[22px]">
+            Or Enter Skills
+            Manually
+          </CardTitle>
+
+          <CardDescription className="text-md">
+            Your signup data auto
+            appears here
           </CardDescription>
         </CardHeader>
-        <CardContent className="space-y-4">
+
+        <CardContent className="space-y-5">
           <div>
-            <label className="text-sm font-medium mb-2 block">Your Skills</label>
+            <label className="font-medium">
+              Your Skills
+            </label>
+
             <textarea
-              className="w-full p-3 border rounded-lg resize-none h-32"
-              placeholder="Enter your skills separated by commas...&#10;Example: JavaScript, React, Python, Git, Communication"
-              onChange={(e) => {
-                const skills = e.target.value.split(',').map(s => s.trim()).filter(s => s)
-                setExtractedSkills(skills)
-              }}
+              rows={4}
+              value={skills}
+              onChange={(e) =>
+                setSkills(
+                  e.target.value
+                )
+              }
+              className="w-full mt-2 p-4 rounded-xl border resize-none"
             />
           </div>
-          
+
           <div>
-            <label className="text-sm font-medium mb-2 block">Experience Level</label>
-            <select className="w-full p-3 border rounded-lg">
-              <option>College Student</option>
-              <option>Recent Graduate</option>
-              <option>Entry Level (0-2 years)</option>
-              <option>Mid Level (2-5 years)</option>
-              <option>Senior Level (5+ years)</option>
+            <label className="font-medium">
+              Career Goals
+            </label>
+
+            <Input
+              value={goal}
+              onChange={(e) =>
+                setGoal(
+                  e.target.value
+                )
+              }
+              placeholder="AI Engineer"
+            />
+          </div>
+
+          <div>
+            <label className="font-medium">
+              Experience Level
+            </label>
+
+            <select
+              value={experience}
+              onChange={(e) =>
+                setExperience(
+                  e.target.value
+                )
+              }
+              className="w-full mt-2 p-4 rounded-xl border"
+            >
+              <option>
+                College Student
+              </option>
+              <option>
+                Recent Graduate
+              </option>
+              <option>
+                Fresher
+              </option>
+              <option>
+                Working Professional
+              </option>
             </select>
           </div>
 
-          <div>
-            <label className="text-sm font-medium mb-2 block">Field of Study</label>
-            <input
-              type="text"
-              className="w-full p-3 border rounded-lg"
-              placeholder="e.g., Computer Science, Business, Engineering"
-            />
-          </div>
-
-          <Button 
-            onClick={() => onUpload({
-              resume: null,
-              currentSkills: extractedSkills,
-              experience: 'College Student',
-              education: 'Computer Science'
-            })}
-            className="w-full"
-            disabled={extractedSkills.length === 0}
+          <Button
+            onClick={
+              continueManual
+            }
+            className="w-full h-12"
           >
-            Continue to Goal Setting
+            Continue to Goal
+            Setting
           </Button>
         </CardContent>
       </Card>
     </div>
-  )
+  );
 }

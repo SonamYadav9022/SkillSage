@@ -1,23 +1,34 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card'
+
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Progress } from '@/components/ui/progress'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { 
-  CheckCircle, 
-  Circle, 
-  Clock, 
+
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from '@/components/ui/tabs'
+
+import {
+  CheckCircle,
+  Circle,
+  Clock,
   Calendar,
-  TrendingUp,
   Target,
   Award,
-  BookOpen,
   Plus,
   Edit,
-  Star
 } from 'lucide-react'
 
 interface ProgressTrackerProps {
@@ -25,18 +36,26 @@ interface ProgressTrackerProps {
   roadmapId?: string
 }
 
-export default function ProgressTracker({ roadmap, roadmapId }: ProgressTrackerProps) {
-  const [weeklyProgress, setWeeklyProgress] = useState([
-    { week: 1, goal: 'Complete JavaScript basics course', completed: true, hours: 8 },
-    { week: 2, goal: 'Build first React component', completed: true, hours: 12 },
-    { week: 3, goal: 'Learn Node.js fundamentals', completed: false, hours: 6 },
-    { week: 4, goal: 'Create full-stack mini project', completed: false, hours: 0 }
-  ])
+export default function ProgressTracker({
+  roadmap,
+  roadmapId,
+}: ProgressTrackerProps) {
+  const [weeklyProgress, setWeeklyProgress] =
+    useState<any[]>([])
 
-  const [currentWeek, setCurrentWeek] = useState(3)
+  const [currentWeek, setCurrentWeek] =
+    useState(1)
 
+  const [showAddGoal, setShowAddGoal] =
+    useState(false)
+
+  const [newGoal, setNewGoal] =
+    useState('')
+
+  if (!roadmap) return null
+
+  /* LOAD DB */
   useEffect(() => {
-    // Load progress from API if roadmapId is available
     if (roadmapId) {
       loadProgress()
     }
@@ -44,384 +63,513 @@ export default function ProgressTracker({ roadmap, roadmapId }: ProgressTrackerP
 
   const loadProgress = async () => {
     try {
-      const response = await fetch(`/api/progress?roadmapId=${roadmapId}&userId=demo-user-id`)
-      const result = await response.json()
-      
-      if (result.success && result.progress.length > 0) {
-        setWeeklyProgress(result.progress.map(p => ({
-          week: p.weekNumber,
-          goal: p.goal,
-          completed: p.completed,
-          hours: p.actualHours
-        })))
+      const res = await fetch(
+        `/api/progress?userId=demo-user-id&roadmapId=${roadmapId}`
+      )
+
+      const data = await res.json()
+
+      if (
+        data.success &&
+        data.progress.length > 0
+      ) {
+        const formatted =
+          data.progress.map(
+            (item: any) => ({
+              week:
+                item.weekNumber,
+              goal: item.goal,
+              completed:
+                item.completed,
+              hours:
+                item.actualHours,
+            })
+          )
+
+        setWeeklyProgress(
+          formatted
+        )
+
+        const pending =
+          formatted.find(
+            (w: any) =>
+              !w.completed
+          )
+
+        setCurrentWeek(
+          pending
+            ? pending.week
+            : formatted.length
+        )
+      } else {
+        setWeeklyProgress([
+          {
+            week: 1,
+            goal:
+              'Start Learning',
+            completed:
+              false,
+            hours: 0,
+          },
+        ])
       }
     } catch (error) {
-      console.error('Failed to load progress:', error)
+      console.log(error)
     }
   }
 
-  const updateProgress = async (weekNumber: number, updates: any) => {
+  /* SAVE WEEK */
+  const saveWeek = async (
+    weekNumber: number,
+    data: any
+  ) => {
     try {
-      const response = await fetch('/api/progress', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          userId: 'demo-user-id',
-          roadmapId: roadmapId || 'demo-roadmap-id',
-          weekNumber,
-          ...updates
-        })
-      })
+      await fetch(
+        '/api/progress',
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type':
+              'application/json',
+          },
+          body: JSON.stringify({
+            userId:
+              'demo-user-id',
+            roadmapId:
+              roadmapId ||
+              'demo-roadmap',
+            weekNumber,
+            ...data,
+          }),
+        }
+      )
+    } catch (error) {
+      console.log(error)
+    }
+  }
 
-      const result = await response.json()
-      
-      if (result.success) {
-        setWeeklyProgress(prev => 
-          prev.map(week => 
-            week.week === weekNumber 
-              ? { ...week, ...updates }
-              : week
-          )
+  /* ADD HOURS */
+  const addHours = async () => {
+    const target =
+      weeklyProgress[
+        currentWeek - 1
+      ]
+
+    const newHours =
+      target.hours + 2
+
+    const updated =
+      weeklyProgress.map(
+        (week) =>
+          week.week ===
+          currentWeek
+            ? {
+                ...week,
+                hours:
+                  newHours,
+              }
+            : week
+      )
+
+    setWeeklyProgress(
+      updated
+    )
+
+    await saveWeek(
+      currentWeek,
+      {
+        goal: target.goal,
+        actualHours:
+          newHours,
+        completed:
+          target.completed,
+      }
+    )
+  }
+
+  /* MARK COMPLETE */
+  const markComplete =
+    async () => {
+      const updated =
+        weeklyProgress.map(
+          (week) => ({
+            ...week,
+            completed: true,
+            hours: 10,
+          })
+        )
+
+      setWeeklyProgress(
+        updated
+      )
+
+      for (const week of updated) {
+        await saveWeek(
+          week.week,
+          {
+            goal:
+              week.goal,
+            actualHours: 10,
+            completed: true,
+          }
         )
       }
-    } catch (error) {
-      console.error('Failed to update progress:', error)
-      // Update local state anyway for demo
-      setWeeklyProgress(prev => 
-        prev.map(week => 
-          week.week === weekNumber 
-            ? { ...week, ...updates }
-            : week
-        )
+    }
+
+  /* ADD NEW WEEK FIXED */
+  const addNewWeek =
+    async () => {
+      if (!newGoal.trim())
+        return
+
+      const nextWeek =
+        weeklyProgress.length +
+        1
+
+      const newWeekData = {
+        week: nextWeek,
+        goal: newGoal,
+        completed: false,
+        hours: 0,
+      }
+
+      /* SHOW IN UI FIRST */
+      setWeeklyProgress(
+        (prev) => [
+          ...prev,
+          newWeekData,
+        ]
+      )
+
+      setNewGoal('')
+      setShowAddGoal(false)
+
+      /* SAVE IN DB */
+      await saveWeek(
+        nextWeek,
+        {
+          goal:
+            newWeekData.goal,
+          actualHours: 0,
+          completed: false,
+        }
       )
     }
-  }
 
-  const completedWeeks = weeklyProgress.filter(w => w.completed).length
-  const totalHours = weeklyProgress.reduce((sum, week) => sum + week.hours, 0)
-  const targetHours = 40 // Target hours per month
+  const completedWeeks =
+    weeklyProgress.filter(
+      (w) => w.completed
+    ).length
 
-  const milestoneProgress = roadmap.milestones.map((milestone: any, index: number) => ({
-    ...milestone,
-    progress: index === 0 ? 100 : index === 1 ? 60 : 0,
-    status: index === 0 ? 'completed' : index === 1 ? 'in-progress' : 'not-started'
-  }))
+  const totalHours =
+    weeklyProgress.reduce(
+      (sum, item) =>
+        sum + item.hours,
+      0
+    )
+
+  const overall =
+    weeklyProgress.length > 0
+      ? Math.round(
+          (completedWeeks /
+            weeklyProgress.length) *
+            100
+        )
+      : 0
 
   return (
     <div className="space-y-6">
-      {/* Overall Progress Summary */}
+      {/* SUMMARY */}
       <div className="grid md:grid-cols-4 gap-4">
         <Card>
-          <CardContent className="p-4">
-            <div className="flex items-center space-x-2">
-              <Target className="w-8 h-8 text-blue-600" />
-              <div>
-                <p className="text-sm font-medium text-gray-600">Overall Progress</p>
-                <p className="text-2xl font-bold">45%</p>
-              </div>
+          <CardContent className="p-4 flex gap-2 items-center">
+            <Target className="w-8 h-8 text-blue-600" />
+            <div>
+              <p className="text-sm text-gray-600">
+                Progress
+              </p>
+              <p className="text-2xl font-bold">
+                {overall}%
+              </p>
             </div>
           </CardContent>
         </Card>
-        
+
         <Card>
-          <CardContent className="p-4">
-            <div className="flex items-center space-x-2">
-              <Calendar className="w-8 h-8 text-green-600" />
-              <div>
-                <p className="text-sm font-medium text-gray-600">Weeks Active</p>
-                <p className="text-2xl font-bold">{completedWeeks}</p>
-              </div>
+          <CardContent className="p-4 flex gap-2 items-center">
+            <Calendar className="w-8 h-8 text-green-600" />
+            <div>
+              <p className="text-sm text-gray-600">
+                Weeks Done
+              </p>
+              <p className="text-2xl font-bold">
+                {
+                  completedWeeks
+                }
+              </p>
             </div>
           </CardContent>
         </Card>
-        
+
         <Card>
-          <CardContent className="p-4">
-            <div className="flex items-center space-x-2">
-              <Clock className="w-8 h-8 text-purple-600" />
-              <div>
-                <p className="text-sm font-medium text-gray-600">Hours Learned</p>
-                <p className="text-2xl font-bold">{totalHours}</p>
-              </div>
+          <CardContent className="p-4 flex gap-2 items-center">
+            <Clock className="w-8 h-8 text-purple-600" />
+            <div>
+              <p className="text-sm text-gray-600">
+                Hours
+              </p>
+              <p className="text-2xl font-bold">
+                {totalHours}
+              </p>
             </div>
           </CardContent>
         </Card>
-        
+
         <Card>
-          <CardContent className="p-4">
-            <div className="flex items-center space-x-2">
-              <Award className="w-8 h-8 text-yellow-600" />
-              <div>
-                <p className="text-sm font-medium text-gray-600">Milestones</p>
-                <p className="text-2xl font-bold">1/3</p>
-              </div>
+          <CardContent className="p-4 flex gap-2 items-center">
+            <Award className="w-8 h-8 text-yellow-600" />
+            <div>
+              <p className="text-sm text-gray-600">
+                Milestones
+              </p>
+              <p className="text-2xl font-bold">
+                1/3
+              </p>
             </div>
           </CardContent>
         </Card>
       </div>
 
-      {/* Main Progress Tracking */}
-      <Tabs defaultValue="weekly" className="space-y-6">
+      <Tabs
+        defaultValue="weekly"
+        className="space-y-6"
+      >
         <TabsList className="grid w-full grid-cols-3">
-          <TabsTrigger value="weekly">Weekly Progress</TabsTrigger>
-          <TabsTrigger value="milestones">Milestone Tracking</TabsTrigger>
-          <TabsTrigger value="analytics">Analytics</TabsTrigger>
+          <TabsTrigger value="weekly">
+            Weekly
+          </TabsTrigger>
+
+          <TabsTrigger value="milestones">
+            Milestones
+          </TabsTrigger>
+
+          <TabsTrigger value="analytics">
+            Analytics
+          </TabsTrigger>
         </TabsList>
 
-        <TabsContent value="weekly" className="space-y-6">
-          {/* Current Week Focus */}
-          <Card className="border-l-4 border-l-blue-500">
-            <CardHeader>
-              <div className="flex items-center justify-between">
-                <div>
-                  <CardTitle className="flex items-center">
-                    <Calendar className="w-5 h-5 mr-2" />
-                    Week {currentWeek} Focus
-                  </CardTitle>
-                  <CardDescription>
-                    Keep track of your weekly learning goals and progress
-                  </CardDescription>
-                </div>
-                <Button variant="outline" size="sm">
-                  <Edit className="w-4 h-4 mr-2" />
-                  Edit Goal
-                </Button>
-              </div>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+        {/* WEEKLY */}
+        <TabsContent value="weekly">
+          <div className="space-y-6">
+            <Card>
+              <CardHeader>
+                <div className="flex justify-between">
                   <div>
-                    <h4 className="font-medium">{weeklyProgress[currentWeek - 1]?.goal}</h4>
-                    <p className="text-sm text-gray-600 mt-1">
-                      Target: 10 hours • Current: {weeklyProgress[currentWeek - 1]?.hours || 0} hours
-                    </p>
-                  </div>
-                  <div className="text-right">
-                    <Badge variant={weeklyProgress[currentWeek - 1]?.completed ? "default" : "secondary"}>
-                      {weeklyProgress[currentWeek - 1]?.completed ? "Completed" : "In Progress"}
-                    </Badge>
-                  </div>
-                </div>
-                
-                <div className="space-y-2">
-                  <div className="flex justify-between text-sm">
-                    <span>Weekly Progress</span>
-                    <span>{((weeklyProgress[currentWeek - 1]?.hours || 0) / 10) * 100}%</span>
-                  </div>
-                  <Progress value={((weeklyProgress[currentWeek - 1]?.hours || 0) / 10) * 100} className="h-2" />
-                </div>
+                    <CardTitle>
+                      Week{' '}
+                      {
+                        currentWeek
+                      }
+                    </CardTitle>
 
-                <div className="flex space-x-2">
-                  <Button 
-                    variant="outline" 
+                    <CardDescription>
+                      Current Focus
+                    </CardDescription>
+                  </div>
+
+                  <Button
+                    variant="outline"
+                    size="sm"
+                  >
+                    <Edit className="w-4 h-4 mr-2" />
+                    Edit
+                  </Button>
+                </div>
+              </CardHeader>
+
+              <CardContent className="space-y-4">
+                <h3 className="font-medium">
+                  {
+                    weeklyProgress[
+                      currentWeek -
+                        1
+                    ]?.goal
+                  }
+                </h3>
+
+                <Progress
+                  value={
+                    ((weeklyProgress[
+                      currentWeek -
+                        1
+                    ]?.hours ||
+                      0) /
+                      10) *
+                    100
+                  }
+                />
+
+                <div className="flex gap-2">
+                  <Button
+                    variant="outline"
                     className="flex-1"
-                    onClick={() => {
-                      const newHours = (weeklyProgress[currentWeek - 1]?.hours || 0) + 2
-                      updateProgress(currentWeek, { actualHours: newHours })
-                    }}
+                    onClick={
+                      addHours
+                    }
                   >
                     Log 2 Hours
                   </Button>
-                  <Button 
-                    className="flex-1"
-                    onClick={() => updateProgress(currentWeek, { completed: true })}
+
+                  <Button
+                    className="flex-1 bg-green-600 hover:bg-green-700"
+                    onClick={
+                      markComplete
+                    }
                   >
                     Mark Complete
                   </Button>
                 </div>
-              </div>
-            </CardContent>
-          </Card>
+              </CardContent>
+            </Card>
 
-          {/* Week by Week Progress */}
-          <Card>
-            <CardHeader>
-              <CardTitle>Week by Week Progress</CardTitle>
-              <CardDescription>
-                Your learning journey over the past weeks
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-3">
-                {weeklyProgress.map((week) => (
-                  <div key={week.week} className="flex items-center justify-between p-4 border rounded-lg">
-                    <div className="flex items-center space-x-3">
-                      {week.completed ? (
-                        <CheckCircle className="w-6 h-6 text-green-500" />
-                      ) : (
-                        <Circle className="w-6 h-6 text-gray-400" />
-                      )}
-                      <div>
-                        <h4 className="font-medium">Week {week.week}: {week.goal}</h4>
-                        <p className="text-sm text-gray-600">{week.hours} hours completed</p>
-                      </div>
-                    </div>
-                    <div className="text-right">
-                      <Badge variant={week.completed ? "default" : "secondary"}>
-                        {week.completed ? "Completed" : week.hours > 0 ? "In Progress" : "Not Started"}
-                      </Badge>
-                    </div>
-                  </div>
-                ))}
-              </div>
-              
-              <Button variant="outline" className="w-full mt-4">
-                <Plus className="w-4 h-4 mr-2" />
-                Add Next Week Goal
-              </Button>
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        <TabsContent value="milestones" className="space-y-6">
-          <div className="space-y-4">
-            {milestoneProgress.map((milestone) => (
-              <Card key={milestone.id} className={
-                milestone.status === 'completed' ? 'border-green-200 bg-green-50' :
-                milestone.status === 'in-progress' ? 'border-blue-200 bg-blue-50' :
-                'border-gray-200'
-              }>
-                <CardHeader>
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center space-x-3">
-                      {milestone.status === 'completed' ? (
-                        <CheckCircle className="w-8 h-8 text-green-500" />
-                      ) : milestone.status === 'in-progress' ? (
-                        <Clock className="w-8 h-8 text-blue-500" />
-                      ) : (
-                        <Circle className="w-8 h-8 text-gray-400" />
-                      )}
-                      <div>
-                        <CardTitle className="text-lg">{milestone.title}</CardTitle>
-                        <CardDescription>{milestone.description}</CardDescription>
-                      </div>
-                    </div>
-                    <div className="text-right">
-                      <Badge variant={
-                        milestone.status === 'completed' ? "default" :
-                        milestone.status === 'in-progress' ? "secondary" :
-                        "outline"
-                      }>
-                        {milestone.status === 'completed' ? "Completed" :
-                         milestone.status === 'in-progress' ? "In Progress" :
-                         "Not Started"}
-                      </Badge>
-                    </div>
-                  </div>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-3">
-                    <div className="flex justify-between text-sm">
-                      <span>Progress</span>
-                      <span>{milestone.progress}%</span>
-                    </div>
-                    <Progress value={milestone.progress} className="h-2" />
-                    
-                    <div className="flex flex-wrap gap-2 mt-3">
-                      {milestone.skills.map((skill: string, index: number) => (
-                        <Badge key={index} variant="outline" className="text-xs">
-                          {skill}
-                        </Badge>
-                      ))}
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </TabsContent>
-
-        <TabsContent value="analytics" className="space-y-6">
-          <div className="grid md:grid-cols-2 gap-6">
-            {/* Learning Analytics */}
+            {/* ALL WEEKS */}
             <Card>
               <CardHeader>
-                <CardTitle className="flex items-center">
-                  <TrendingUp className="w-5 h-5 mr-2" />
-                  Learning Analytics
+                <CardTitle>
+                  All Weeks
                 </CardTitle>
               </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  <div className="flex justify-between items-center">
-                    <span className="text-sm font-medium">Monthly Target</span>
-                    <span className="text-sm">{targetHours} hours</span>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-sm font-medium">Current Progress</span>
-                    <span className="text-sm">{totalHours} hours</span>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-sm font-medium">Completion Rate</span>
-                    <span className="text-sm">{((totalHours / targetHours) * 100).toFixed(0)}%</span>
-                  </div>
-                  <Progress value={(totalHours / targetHours) * 100} className="h-3" />
-                  
-                  <div className="pt-2">
-                    <p className="text-xs text-gray-600">
-                      {totalHours >= targetHours ? 
-                        "Great job! You've met your monthly target!" :
-                        `You need ${targetHours - totalHours} more hours to reach your monthly target`
+
+              <CardContent className="space-y-3">
+                {weeklyProgress.map(
+                  (week) => (
+                    <div
+                      key={
+                        week.week
                       }
-                    </p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
+                      className="border rounded-lg p-4 flex justify-between"
+                    >
+                      <div className="flex gap-3 items-center">
+                        {week.completed ? (
+                          <CheckCircle className="w-6 h-6 text-green-500" />
+                        ) : (
+                          <Circle className="w-6 h-6 text-gray-400" />
+                        )}
 
-            {/* Achievement Badges */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center">
-                  <Award className="w-5 h-5 mr-2" />
-                  Achievements
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="grid grid-cols-3 gap-3">
-                  <div className="text-center">
-                    <div className="w-12 h-12 bg-yellow-100 rounded-full flex items-center justify-center mx-auto mb-2">
-                      <Star className="w-6 h-6 text-yellow-600" />
+                        <div>
+                          <h4 className="font-medium">
+                            Week{' '}
+                            {
+                              week.week
+                            }
+                            :{' '}
+                            {
+                              week.goal
+                            }
+                          </h4>
+
+                          <p className="text-sm text-gray-600">
+                            {
+                              week.hours
+                            }{' '}
+                            hrs
+                          </p>
+                        </div>
+                      </div>
+
+                      <Badge>
+                        {week.completed
+                          ? 'Done'
+                          : 'Pending'}
+                      </Badge>
                     </div>
-                    <p className="text-xs font-medium">Fast Learner</p>
-                  </div>
-                  <div className="text-center">
-                    <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-2">
-                      <Target className="w-6 h-6 text-blue-600" />
+                  )
+                )}
+
+                {/* ADD WEEK */}
+                <div className="pt-4 space-y-3">
+                  {!showAddGoal ? (
+                    <Button
+                      variant="outline"
+                      className="w-full"
+                      onClick={() =>
+                        setShowAddGoal(
+                          true
+                        )
+                      }
+                    >
+                      <Plus className="w-4 h-4 mr-2" />
+                      Add Next Week Goal
+                    </Button>
+                  ) : (
+                    <div className="flex gap-2">
+                      <input
+                        value={
+                          newGoal
+                        }
+                        onChange={(
+                          e
+                        ) =>
+                          setNewGoal(
+                            e
+                              .target
+                              .value
+                          )
+                        }
+                        placeholder="Enter new goal"
+                        className="border rounded px-3 py-2 flex-1"
+                      />
+
+                      <Button
+                        onClick={
+                          addNewWeek
+                        }
+                      >
+                        Save
+                      </Button>
                     </div>
-                    <p className="text-xs font-medium">Goal Setter</p>
-                  </div>
-                  <div className="text-center">
-                    <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-2">
-                      <CheckCircle className="w-6 h-6 text-green-600" />
-                    </div>
-                    <p className="text-xs font-medium">Consistent</p>
-                  </div>
-                  <div className="text-center opacity-50">
-                    <div className="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-2">
-                      <Award className="w-6 h-6 text-gray-400" />
-                    </div>
-                    <p className="text-xs font-medium">Master</p>
-                  </div>
-                  <div className="text-center opacity-50">
-                    <div className="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-2">
-                      <TrendingUp className="w-6 h-6 text-gray-400" />
-                    </div>
-                    <p className="text-xs font-medium">Expert</p>
-                  </div>
-                  <div className="text-center opacity-50">
-                    <div className="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-2">
-                      <BookOpen className="w-6 h-6 text-gray-400" />
-                    </div>
-                    <p className="text-xs font-medium">Scholar</p>
-                  </div>
+                  )}
                 </div>
               </CardContent>
             </Card>
           </div>
+        </TabsContent>
+
+        {/* MILESTONES */}
+        <TabsContent value="milestones">
+          <Card>
+            <CardContent className="p-6">
+              Milestone tracking active.
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        {/* ANALYTICS */}
+        <TabsContent value="analytics">
+          <Card>
+            <CardContent className="p-6 space-y-3">
+              <p>
+                Total Hours:{' '}
+                {
+                  totalHours
+                }
+              </p>
+
+              <p>
+                Completed
+                Weeks:{' '}
+                {
+                  completedWeeks
+                }
+              </p>
+
+              <Progress
+                value={
+                  overall
+                }
+              />
+            </CardContent>
+          </Card>
         </TabsContent>
       </Tabs>
     </div>

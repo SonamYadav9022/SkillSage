@@ -1,78 +1,142 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
+import { getServerSession } from 'next-auth'
+import { authOptions } from '@/lib/auth'
 
-// GET progress for a user/roadmap
+/* GET */
 export async function GET(request: NextRequest) {
   try {
-    const { searchParams } = new URL(request.url)
-    const userId = searchParams.get('userId')
-    const roadmapId = searchParams.get('roadmapId')
+    const session = await getServerSession(authOptions)
 
-    if (!userId) {
-      return NextResponse.json({ error: 'userId is required' }, { status: 400 })
+    if (!session?.user?.email) {
+      return NextResponse.json(
+        { error: 'Unauthorized' },
+        { status: 401 }
+      )
     }
 
-    const progress = await db.progress.findMany({
+    const user = await db.user.findUnique({
       where: {
-        userId,
-        ...(roadmapId && { roadmapId })
+        email: session.user.email,
       },
-      orderBy: {
-        weekNumber: 'asc'
-      }
     })
 
-    return NextResponse.json({ success: true, progress })
+    if (!user) {
+      return NextResponse.json(
+        { error: 'User not found' },
+        { status: 404 }
+      )
+    }
 
+    const { searchParams } = new URL(request.url)
+
+    const roadmapId =
+      searchParams.get('roadmapId')
+
+    const progress =
+      await db.progress.findMany({
+        where: {
+          userId: user.id,
+          ...(roadmapId && {
+            roadmapId,
+          }),
+        },
+        orderBy: {
+          weekNumber: 'asc',
+        },
+      })
+
+    return NextResponse.json({
+      success: true,
+      progress,
+    })
   } catch (error) {
-    console.error('Progress fetch error:', error)
     return NextResponse.json(
-      { error: 'Failed to fetch progress' },
+      { error: 'Failed' },
       { status: 500 }
     )
   }
 }
 
-// POST update progress
-export async function POST(request: NextRequest) {
+/* POST */
+export async function POST(
+  request: NextRequest
+) {
   try {
-    const { userId, roadmapId, weekNumber, actualHours, completed, notes } = await request.json()
+    const session = await getServerSession(authOptions)
 
-    if (!userId || !roadmapId || !weekNumber) {
-      return NextResponse.json({ error: 'Missing required fields' }, { status: 400 })
+    if (!session?.user?.email) {
+      return NextResponse.json(
+        { error: 'Unauthorized' },
+        { status: 401 }
+      )
     }
 
-    const progress = await db.progress.upsert({
+    const user = await db.user.findUnique({
       where: {
-        userId_roadmapId_weekNumber: {
-          userId,
-          roadmapId,
-          weekNumber
-        }
+        email: session.user.email,
       },
-      update: {
-        actualHours: actualHours || 0,
-        completed: completed || false,
-        notes: notes || ''
-      },
-      create: {
-        userId,
-        roadmapId,
-        weekNumber,
-        goal: `Week ${weekNumber}: Learning Goal`,
-        targetHours: 10,
-        actualHours: actualHours || 0,
-        completed: completed || false,
-        notes: notes || ''
-      }
     })
 
-    return NextResponse.json({ success: true, progress })
+    if (!user) {
+      return NextResponse.json(
+        { error: 'User not found' },
+        { status: 404 }
+      )
+    }
 
+    const {
+      roadmapId,
+      weekNumber,
+      goal,
+      actualHours,
+      completed,
+      notes,
+    } = await request.json()
+
+    const progress =
+      await db.progress.upsert({
+        where: {
+          userId_roadmapId_weekNumber:
+            {
+              userId: user.id,
+              roadmapId,
+              weekNumber,
+            },
+        },
+
+        update: {
+          goal,
+          actualHours:
+            actualHours || 0,
+          completed:
+            completed || false,
+          notes: notes || '',
+        },
+
+        create: {
+          userId: user.id,
+          roadmapId,
+          weekNumber,
+          goal,
+          targetHours: 10,
+          actualHours:
+            actualHours || 0,
+          completed:
+            completed || false,
+          notes: notes || '',
+        },
+      })
+
+    return NextResponse.json({
+      success: true,
+      progress,
+    })
   } catch (error) {
-    console.error('Progress update error:', error)
+    console.log(error)
+
     return NextResponse.json(
-      { error: 'Failed to update progress' },
+      { error: 'Failed' },
       { status: 500 }
     )
   }

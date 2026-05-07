@@ -120,3 +120,19 @@
     @apply bg-background text-foreground;
   }
 }
+
+@keyframes typing {
+  from {
+    width: 0;
+    opacity: 0.6;
+  }
+  to {
+    width: 100%;
+    opacity: 1;
+  }
+}
+
+.animate-typing {
+  width: fit-content;
+  animation: typing 2.5s steps(35, end);
+}
