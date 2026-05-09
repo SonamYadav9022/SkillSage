@@ -12,10 +12,10 @@ export default function ProfilePage() {
     useState<any>(null)
 
   const [msg, setMsg] =
-  useState('')
+    useState('')
 
   const [msgType, setMsgType] =
-  useState('success')
+    useState('success')
 
   const [uploading, setUploading] =
     useState(false)
@@ -62,29 +62,29 @@ export default function ProfilePage() {
     calculateProgress()
 
   const updateProfile =
-  async () => {
-    const res = await fetch(
-      '/api/user/update',
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type':
-            'application/json',
-        },
-        body: JSON.stringify(user),
-      }
-    )
-
-    if (res.ok) {
-      setMsg(
-        'Profile updated successfully'
+    async () => {
+      const res = await fetch(
+        '/api/user/update',
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type':
+              'application/json',
+          },
+          body: JSON.stringify(user),
+        }
       )
-      setMsgType('success')
-    } else {
-      setMsg('Update failed')
-      setMsgType('error')
+
+      if (res.ok) {
+        setMsg(
+          'Profile updated successfully'
+        )
+        setMsgType('success')
+      } else {
+        setMsg('Update failed')
+        setMsgType('error')
+      }
     }
-  }
 
   const uploadResume =
     async (
@@ -183,14 +183,14 @@ export default function ProfilePage() {
 
   if (!user) {
     return (
-      <div className="min-h-screen bg-[#dfe6f5] flex items-center justify-center text-xl font-semibold">
+      <div className="min-h-screen bg-background text-foreground flex items-center justify-center text-xl font-semibold">
         Loading...
       </div>
     )
   }
 
   return (
-    <div className="min-h-screen bg-[#dfe6f5] px-6 py-8">
+    <div className="min-h-screen bg-background text-foreground px-6 py-8 transition-colors duration-300">
 
       {/* TOP */}
       <div className="max-w-5xl mx-auto flex items-center mb-7">
@@ -205,22 +205,22 @@ export default function ProfilePage() {
         </div>
 
         <div className="w-[80%] flex flex-col items-center justify-center pr-28">
-          <h2 className="italic text-[26px] font-semibold text-blue-600">
+          <h2 className="italic text-[26px] font-semibold text-blue-500">
             🚀 Growth is built through consistency.
           </h2>
 
-          <p className="mt-2 text-gray-700 text-lg">
+          <p className="mt-2 text-muted-foreground text-lg">
             Build your future one smart step at a time!
           </p>
         </div>
       </div>
 
       {/* CARD */}
-      <div className="max-w-5xl mx-auto bg-white/75 rounded-3xl shadow-xl p-7">
+      <div className="max-w-5xl mx-auto bg-card border border-border rounded-3xl shadow-xl p-7">
 
         {/* HEADER */}
         <div className="flex justify-between items-center mb-6">
-          <h1 className="text-3xl font-bold">
+          <h1 className="text-3xl font-bold text-foreground">
             My Profile
           </h1>
 
@@ -231,7 +231,7 @@ export default function ProfilePage() {
                   '/dashboard'
                 )
               }
-              className="px-5 py-2 rounded-2xl border bg-white"
+              className="px-5 py-2 rounded-2xl border border-border bg-background text-foreground"
             >
               Back
             </button>
@@ -243,7 +243,7 @@ export default function ProfilePage() {
                     '/',
                 })
               }
-              className="px-5 py-2 rounded-2xl bg-black text-white"
+              className="px-5 py-2 rounded-2xl bg-black text-white dark:bg-white dark:text-black"
             >
               Logout
             </button>
@@ -257,12 +257,12 @@ export default function ProfilePage() {
               Student Growth Progress
             </span>
 
-            <span className="text-blue-600">
+            <span className="text-blue-500">
               {progress}%
             </span>
           </div>
 
-          <div className="h-3 bg-gray-200 rounded-full">
+          <div className="h-3 bg-muted rounded-full">
             <div
               className="h-3 rounded-full bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500"
               style={{
@@ -340,7 +340,7 @@ export default function ProfilePage() {
                   e.target.value,
               })
             }
-            className="mt-2 w-full rounded-2xl border p-4"
+            className="mt-2 w-full rounded-2xl border border-border p-4 bg-background text-foreground"
           />
         </div>
 
@@ -402,7 +402,7 @@ export default function ProfilePage() {
                   user.resumeUrl
                 }
                 target="_blank"
-                className="text-blue-600 underline"
+                className="text-blue-500 underline"
               >
                 View Uploaded Resume
               </a>
@@ -418,12 +418,13 @@ export default function ProfilePage() {
             </div>
           ) : (
             <div className="flex items-center gap-4 flex-wrap">
-              <p className="text-gray-500">
+              <p className="text-muted-foreground">
                 No Resume Uploaded
               </p>
 
-              <label className="px-4 py-2 rounded-xl bg-black text-white cursor-pointer">
+              <label className="px-4 py-2 rounded-xl bg-black text-white dark:bg-white dark:text-black cursor-pointer">
                 Browse Files
+
                 <input
                   type="file"
                   accept=".pdf"
@@ -437,7 +438,7 @@ export default function ProfilePage() {
           )}
 
           {uploading && (
-            <p className="mt-2 text-blue-600">
+            <p className="mt-2 text-blue-500">
               Uploading...
             </p>
           )}
@@ -449,7 +450,7 @@ export default function ProfilePage() {
             Joined On
           </h3>
 
-          <p>
+          <p className="text-muted-foreground">
             {new Date(
               user.createdAt
             ).toLocaleDateString()}
@@ -462,23 +463,23 @@ export default function ProfilePage() {
             onClick={
               updateProfile
             }
-            className="px-7 py-3 rounded-2xl bg-black text-white"
+            className="px-7 py-3 rounded-2xl bg-black text-white dark:bg-white dark:text-black"
           >
             Update Profile
           </button>
         </div>
 
         {msg && (
-        <p
-        className={`mt-4 font-medium ${
-        msgType === 'success'
-        ? 'text-green-600'
-        : 'text-red-600'
-    }`}
-  >
-    {msg}
-  </p>
-)}
+          <p
+            className={`mt-4 font-medium ${
+              msgType === 'success'
+                ? 'text-green-500'
+                : 'text-red-500'
+            }`}
+          >
+            {msg}
+          </p>
+        )}
       </div>
     </div>
   )
@@ -505,7 +506,7 @@ function InputField({
             e.target.value
           )
         }
-        className="mt-2 w-full h-12 rounded-2xl border px-4 bg-white"
+        className="mt-2 w-full h-12 rounded-2xl border border-border px-4 bg-background text-foreground"
       />
     </div>
   )

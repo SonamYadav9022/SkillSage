@@ -22,6 +22,7 @@ import GoalSetting from '@/components/GoalSetting'
 import RoadmapDisplay from '@/components/RoadmapDisplay'
 import ProgressTracker from '@/components/ProgressTracker'
 import AICompanion from '@/components/AICompanion'
+import { ModeToggle } from "@/components/toggle-mode"
 
 const emptyUserData = {
   resume: null,
@@ -286,9 +287,11 @@ export default function Home() {
     }
 
   return (
-    <div className="min-h-screen bg-[#dfe6f5]">
+    <div className="min-h-screen bg-background text-foreground">
+      
       {/* NAVBAR */}
-      <nav className="w-full bg-white border-b border-gray-200 px-8 py-3 flex items-center justify-between shadow-sm">
+      <nav className="w-full bg-background border-b border-border px-8 py-3 flex items-center justify-between shadow-sm">
+        
         <div className="flex items-center gap-3">
           <Image
             src="/logo.png"
@@ -298,53 +301,53 @@ export default function Home() {
             className="rounded-xl"
           />
 
-          <h1 className="text-3xl font-bold text-gray-900">
+          <h1 className="text-3xl font-bold text-foreground">
             SkillSage
           </h1>
         </div>
 
         <div className="flex items-center gap-3">
+
+          <ModeToggle />
+
           {!session ? (
             <>
               <Link
                 href="/login"
-                className="px-4 py-2 rounded-xl border"
+                className="px-4 py-2 rounded-xl border border-border bg-background text-foreground hover:bg-muted transition"
               >
                 Login
               </Link>
 
               <Link
                 href="/signup"
-                className="px-5 py-2 rounded-xl bg-black text-white"
+                className="px-5 py-2 rounded-xl bg-primary text-primary-foreground hover:opacity-90 transition"
               >
                 Sign Up
               </Link>
             </>
           ) : (
             <>
-              <>
-  <Link
-    href="/my-courses"
-    className="px-4 py-2 rounded-xl border border-gray-300 bg-white"
-  >
-    My Courses
-  </Link>
+              <Link
+                href="/my-courses"
+                className="px-4 py-2 rounded-xl border border-border bg-background text-foreground hover:bg-muted transition"
+              >
+                My Courses
+              </Link>
 
-  <Link
-    href="/counselor"
-    className="px-4 py-2 rounded-xl border border-gray-300 bg-white"
-  >
-    Career Counselor
-  </Link>
+              <Link
+                href="/counselor"
+                className="px-4 py-2 rounded-xl border border-border bg-background text-foreground hover:bg-muted transition"
+              >
+                Career Counselor
+              </Link>
 
-  <Link
-    href="/profile"
-    className="px-4 py-2 rounded-xl bg-gray-100 font-medium"
-  >
-    {session.user?.name || 'Profile'}
-  </Link>
-</>
-
+              <Link
+                href="/profile"
+                className="px-4 py-2 rounded-xl bg-muted text-foreground font-medium hover:bg-accent transition"
+              >
+                {session.user?.name || 'Profile'}
+              </Link>
             </>
           )}
         </div>
@@ -352,6 +355,7 @@ export default function Home() {
 
       {/* MAIN */}
       <main className="max-w-7xl mx-auto px-8 py-8">
+        
         <div className="mb-8">
           <Progress
             value={
@@ -440,9 +444,8 @@ export default function Home() {
                 }
               />
             ) : (
-              <p className="text-center text-gray-500 py-10">
-                No roadmap
-                generated yet.
+              <p className="text-center text-muted-foreground py-10">
+                No roadmap generated yet.
               </p>
             )}
           </TabsContent>
@@ -460,9 +463,8 @@ export default function Home() {
                 }
               />
             ) : (
-              <p className="text-center text-gray-500 py-10">
-                Generate roadmap
-                first.
+              <p className="text-center text-muted-foreground py-10">
+                Generate roadmap first.
               </p>
             )}
           </TabsContent>

@@ -100,7 +100,8 @@ export default function CareerCounselorPage() {
   ]
 
   return (
-    <div className="min-h-screen bg-[#dfe6f5] px-6 py-8">
+    <div className="min-h-screen bg-background text-foreground px-6 py-8 transition-colors duration-300">
+      
       {/* Top */}
       <div className="max-w-7xl mx-auto flex items-center justify-between mb-10">
         <div className="flex items-center gap-4">
@@ -112,45 +113,43 @@ export default function CareerCounselorPage() {
           />
 
           <div>
-            <h1 className="text-3xl font-bold text-gray-900">
+            <h1 className="text-3xl font-bold">
               Career Counselor
             </h1>
 
-            <p className="text-gray-600">
+            <p className="text-muted-foreground">
               Take help of professionals to build your future.
             </p>
           </div>
         </div>
-
-        
       </div>
 
       {/* Cards */}
       <div className="max-w-7xl mx-auto grid md:grid-cols-2 lg:grid-cols-4 gap-6">
         {counselors.map((item, index) => (
           <div
-          key={index}
-          className="bg-white rounded-3xl shadow-md overflow-hidden transition duration-300 flex flex-col h-[550px] hover:-translate-y-2 hover:shadow-2xl hover:scale-[1.02]"
+            key={index}
+            className="bg-card border border-border rounded-3xl shadow-md overflow-hidden transition duration-300 flex flex-col h-[550px] hover:-translate-y-2 hover:shadow-2xl hover:scale-[1.02]"
           >
-            <div className="relative w-full h-72 overflow-hidden bg-gray-100">
-            <Image
-            src={item.image}
-            alt={item.name}
-            fill
-            className="object-cover object-center"
-            />
+            <div className="relative w-full h-72 overflow-hidden bg-muted">
+              <Image
+                src={item.image}
+                alt={item.name}
+                fill
+                className="object-cover object-center"
+              />
             </div>
 
             <div className="p-5 flex flex-col flex-1">
-              <h2 className="text-xl font-bold text-gray-900">
+              <h2 className="text-xl font-bold text-foreground">
                 {item.name}
               </h2>
 
-              <p className="text-sm text-gray-500 mt-1">
+              <p className="text-sm text-muted-foreground mt-1">
                 {item.age} yrs • {item.education}
               </p>
 
-              <div className="mt-3 text-sm space-y-2 text-gray-700">
+              <div className="mt-3 text-sm space-y-2 text-foreground">
                 <p>
                   <span className="font-semibold">
                     Expert In:

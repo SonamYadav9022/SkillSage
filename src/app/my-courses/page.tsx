@@ -21,7 +21,6 @@ import {
   BookOpen,
   Layers,
   Target,
-  BarChart3,
 } from 'lucide-react'
 
 export default function MyCoursesPage() {
@@ -161,7 +160,7 @@ export default function MyCoursesPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#eef3ff] px-8 py-10">
+    <div className="min-h-screen bg-background text-foreground px-8 py-10 transition-colors duration-300">
 
       <div className="max-w-7xl mx-auto space-y-10">
 
@@ -178,18 +177,18 @@ export default function MyCoursesPage() {
               className="rounded-2xl shadow-md"
             />
 
-            <p className="text-xl font-semibold text-gray-700">
+            <p className="text-xl font-semibold text-foreground">
               Today with more energy,
               one lesson closer to success 🚀
             </p>
           </div>
 
           <div>
-            <h1 className="text-4xl font-bold text-gray-900">
+            <h1 className="text-4xl font-bold text-foreground">
               My Courses
             </h1>
 
-            <p className="text-gray-500 mt-2 text-lg">
+            <p className="text-muted-foreground mt-2 text-lg">
               Track your learning
               journey beautifully
             </p>
@@ -199,13 +198,13 @@ export default function MyCoursesPage() {
         {/* EMPTY */}
         {selectedCourses.length ===
           0 && (
-          <Card className="rounded-2xl shadow-md border-0">
+          <Card className="rounded-2xl shadow-md border border-border bg-card">
             <CardContent className="p-10 text-center">
-              <h3 className="text-2xl font-semibold">
+              <h3 className="text-2xl font-semibold text-foreground">
                 No Courses Yet
               </h3>
 
-              <p className="text-gray-500 mt-2">
+              <p className="text-muted-foreground mt-2">
                 Select courses from
                 dashboard first.
               </p>
@@ -234,18 +233,18 @@ export default function MyCoursesPage() {
               return (
                 <Card
                   key={index}
-                  className="rounded-2xl shadow-md border-0 hover:shadow-xl transition-all duration-300"
+                  className="rounded-2xl shadow-md border border-border bg-card hover:shadow-xl transition-all duration-300"
                 >
                   <CardHeader>
 
                     <div className="flex justify-between gap-3">
 
                       <div>
-                        <CardTitle className="text-xl leading-snug">
+                        <CardTitle className="text-xl leading-snug text-foreground">
                           {course}
                         </CardTitle>
 
-                        <p className="text-sm text-gray-500 mt-1">
+                        <p className="text-sm text-muted-foreground mt-1">
                           {
                             details.category
                           }
@@ -282,7 +281,7 @@ export default function MyCoursesPage() {
                     </div>
 
                     {/* DESCRIPTION */}
-                    <div className="space-y-3 text-sm text-gray-600">
+                    <div className="space-y-3 text-sm text-muted-foreground">
 
                       <div className="flex gap-2">
                         <BookOpen className="w-4 h-4 mt-0.5 text-[#6d8cff]" />
@@ -317,11 +316,11 @@ export default function MyCoursesPage() {
                     {/* PROGRESS */}
                     <div className="space-y-2">
                       <div className="flex justify-between text-sm">
-                        <span className="text-gray-500">
+                        <span className="text-muted-foreground">
                           Completed
                         </span>
 
-                        <span className="font-semibold">
+                        <span className="font-semibold text-foreground">
                           {
                             progress
                           }
@@ -349,7 +348,7 @@ export default function MyCoursesPage() {
                     </a>
 
                     {/* FOOTER */}
-                    <div className="flex items-center gap-2 text-green-600 text-sm font-medium">
+                    <div className="flex items-center gap-2 text-green-500 text-sm font-medium">
                       <TrendingUp className="w-4 h-4" />
                       Keep growing daily
                     </div>

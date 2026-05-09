@@ -112,7 +112,7 @@ export async function POST(req: NextRequest) {
           publicId,
           {
             resource_type:
-              "raw",
+              "auto",
           }
         );
       } catch (err) {
