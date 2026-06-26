@@ -1,18 +1,31 @@
-import "next-auth";
+import NextAuth from "next-auth";
+import CredentialsProvider from "next-auth/providers/credentials";
 
-declare module "next-auth" {
-  interface Session {
-    user: {
-      id: string;
-      name?: string | null;
-      email?: string | null;
-      image?: string | null;
-    };
-  }
-}
+const handler = NextAuth({
+  providers: [
+    CredentialsProvider({
+      name: "credentials",
+      credentials: {
+        email: {},
+        password: {},
+      },
 
-declare module "next-auth/jwt" {
-  interface JWT {
-    id?: string;
-  }
-}
+      async authorize(credentials) {
+        // temporary demo auth
+        if (!credentials?.email || !credentials?.password) {
+          return null;
+        }
+
+        return {
+          id: "1",
+          name: "SkillSage User",
+          email: credentials.email as string,
+        };
+      },
+    }),
+  ],
+
+  secret: process.env.NEXTAUTH_SECRET,
+});
+
+export { handler as GET, handler as POST };

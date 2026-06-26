@@ -9,8 +9,6 @@ import { signIn } from "next-auth/react";
 // ── Data ────────────────────────────────────────────────────────────────────
 
 const EDUCATION_LEVELS = [
-  { value: "High School (10th)", label: "High School (10th)", icon: "🏫" },
-  { value: "Higher Secondary (12th)", label: "Higher Secondary (12th)", icon: "📚" },
   { value: "Diploma / Polytechnic", label: "Diploma / Polytechnic", icon: "🎓" },
   { value: "Bachelor's Degree (B.E / B.Tech / BCA / B.Sc)", label: "Bachelor's Degree", icon: "🎓" },
   { value: "Master's Degree (M.Tech / MCA / M.Sc)", label: "Master's Degree", icon: "🏆" },
@@ -459,7 +457,7 @@ export default function SignupPage() {
               <div>
                 <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1.5">Full Name</label>
                 <input
-                  placeholder="e.g. Sonam Yadav"
+                  placeholder="Full Name"
                   required
                   value={form.name}
                   onChange={(e) => set("name", e.target.value)}
@@ -471,7 +469,7 @@ export default function SignupPage() {
                 <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1.5">Email Address</label>
                 <input
                   type="email"
-                  placeholder="you@example.com"
+                  placeholder="Email"
                   required
                   value={form.email}
                   onChange={(e) => set("email", e.target.value)}
@@ -483,7 +481,7 @@ export default function SignupPage() {
                 <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1.5">Password</label>
                 <input
                   type="password"
-                  placeholder="Minimum 6 characters"
+                  placeholder="Password"
                   minLength={6}
                   required
                   value={form.password}
@@ -518,7 +516,7 @@ export default function SignupPage() {
                   type="number"
                   min={15}
                   max={45}
-                  placeholder="e.g. 21"
+                  placeholder="Enter age"
                   value={form.age}
                   onChange={(e) => set("age", e.target.value)}
                   className="w-full h-14 px-4 text-2xl font-bold rounded-xl border border-gray-200 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 text-gray-800 transition"
@@ -578,7 +576,7 @@ export default function SignupPage() {
                 <div className="flex gap-2 pt-1">
                   <input
                     autoFocus
-                    placeholder="e.g. Integrated MSc, Bootcamp Graduate..."
+                    placeholder="Specify your education"
                     value={otherInputs.education}
                     onChange={(e) => setOther("education", e.target.value)}
                     onKeyDown={(e) => e.key === "Enter" && confirmOtherEducation()}
@@ -643,7 +641,7 @@ export default function SignupPage() {
                 <div className="flex gap-2 pt-1">
                   <input
                     autoFocus
-                    placeholder="e.g. Game Development, Embedded Systems..."
+                    placeholder="Specify your domain interest"
                     value={otherInputs.field}
                     onChange={(e) => setOther("field", e.target.value)}
                     onKeyDown={(e) => e.key === "Enter" && confirmOtherDomain()}
@@ -691,7 +689,7 @@ export default function SignupPage() {
                   Don't see your skill? Add it
                 </label>
                 <input
-                  placeholder="e.g. Unity, Embedded C, SAP..."
+                  placeholder="Add your skills"
                   value={otherInputs.skill}
                   onChange={(e) => setOther("skill", e.target.value)}
                   className="w-full h-12 px-4 rounded-xl border border-gray-200 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 text-gray-800 text-sm transition"
@@ -757,7 +755,7 @@ export default function SignupPage() {
                 <div className="flex gap-2 pt-1">
                   <input
                     autoFocus
-                    placeholder="e.g. Java Full Stack Developer"
+                    placeholder="Specify your career goal"
                     value={otherInputs.goal}
                     onChange={(e) => setOther("goal", e.target.value)}
                     onKeyDown={(e) => e.key === "Enter" && confirmOtherGoal()}
@@ -830,7 +828,7 @@ export default function SignupPage() {
                     <div className="flex gap-2 pt-1">
                       <input
                         autoFocus
-                        placeholder="e.g. Comfortable with basics, need project experience"
+                        placeholder="Comfortable with basics"
                         value={otherInputs.level}
                         onChange={(e) => setOther("level", e.target.value)}
                         onKeyDown={(e) => e.key === "Enter" && confirmOtherLevel()}
