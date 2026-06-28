@@ -195,9 +195,9 @@ export default function AICompanion({
 
     window.speechSynthesis.cancel()
 
-    window.speechSynthesis.speak(
+    //window.speechSynthesis.speak(
       speech
-    )
+    
   }
 
   /* ───────────────────────────── */

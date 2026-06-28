@@ -75,9 +75,9 @@ export default function GlobalChatbot() {
 
     window.speechSynthesis.cancel()
 
-    window.speechSynthesis.speak(
+    //window.speechSynthesis.speak(
       speech
-    )
+    
   }
 
   /* ───────────────────────────── */
