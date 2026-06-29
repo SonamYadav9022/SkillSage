@@ -1,5 +1,6 @@
 "use client";
 
+import UserAvatar from '../components/UserAvatar'
 import Link from "next/link";
 import Image from "next/image";
 import { useSession } from "next-auth/react";
@@ -56,12 +57,11 @@ export default function HomePage() {
 
           {session ? (
             <>
-              <Link
-                href="/profile"
-                className="px-4 py-2 rounded-xl bg-muted text-foreground font-medium hover:bg-accent transition"
-              >
-                {session.user?.name || "Profile"}
-              </Link>
+              <UserAvatar
+              name={session.user?.name || "User"}
+              email={session.user?.email || ""}
+              image={session.user?.image || ""}
+            />
             </>
           ) : (
             <>

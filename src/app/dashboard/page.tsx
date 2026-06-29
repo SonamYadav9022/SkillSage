@@ -1,5 +1,6 @@
 'use client'
 
+import UserAvatar from '@/components/UserAvatar'
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
@@ -408,12 +409,11 @@ const savedData =
             </>
           ) : (
             <>
-              <Link
-                href="/my-courses"
-                className="px-4 py-2 rounded-xl border border-border bg-background text-foreground hover:bg-muted transition"
-              >
-                My Courses
-              </Link>
+              <UserAvatar
+                name={session.user?.name || 'User'}
+                email={session.user?.email || ''}
+                image={session.user?.image || ''}
+              />
 
               <Link
                 href="/counselor"
