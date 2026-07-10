@@ -1,7 +1,7 @@
 'use client'
 
 import UserAvatar from '@/components/UserAvatar'
-import { useState, useEffect } from 'react'
+import { Suspense, useState, useEffect } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { useSession, signOut } from 'next-auth/react'
@@ -48,7 +48,7 @@ const emptyUserData = {
   atsData: null,
 }
 
-export default function Home() {
+function DashboardContent() {
   const { data: session, status } =
     useSession()
 
@@ -568,5 +568,12 @@ const savedData =
         </div>
       )}
     </div>
+  )
+}
+export default function Home() {
+  return (
+    <Suspense fallback={null}>
+      <DashboardContent />
+    </Suspense>
   )
 }
