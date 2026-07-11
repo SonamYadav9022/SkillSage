@@ -28,8 +28,6 @@ import {
   Sparkles,
   AlertCircle,
 } from "lucide-react";
-import { generateATSScore } from "@/lib/ats";
-
 interface ResumeUploadProps {
   onUpload: (data: any) => void;
   savedData?: any;
@@ -72,7 +70,33 @@ export default function ResumeUpload({
     matchedSkills: string[]
     missingSkills: string[]
   } | null>(null)
+  const [atsRecalculating, setAtsRecalculating] = useState(false);
   const abortRef = useRef<AbortController | null>(null);
+
+  /* Recompute ATS score via Groq whenever the confirmed career goal changes */
+  const recomputeAts = async (newGoal: string) => {
+    if (!newGoal?.trim() || detectedSkills.length === 0) return;
+    setAtsRecalculating(true);
+    try {
+      const res = await fetch("/api/ats/score", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ skills: detectedSkills, careerGoal: newGoal }),
+      });
+      const data = await res.json();
+      if (res.ok) {
+        setAtsData({
+          score: data.score,
+          matchedSkills: data.matchedSkills,
+          missingSkills: data.missingSkills,
+        });
+      }
+    } catch (err) {
+      console.error("[ATS recompute] failed:", err);
+    } finally {
+      setAtsRecalculating(false);
+    }
+  };
 
   /* ── Auto-load saved data ────────────────────────────────── */
   useEffect(() => {
@@ -232,20 +256,15 @@ const handleFileUpload = async (file: File) => {
       const goals: string[] =
         data.suggestedGoals ?? [];
 
-      /* ATS SCORE */
+      /* ATS SCORE — computed server-side by Groq against the resolved goal */
 
-      const ats = generateATSScore(
-        extractedSkills,
-        goal || goal[0]
-      );
+      const ats = data.ats ?? { score: 0, matchedSkills: [], missingSkills: [] };
 
-      console.log("ATS DATA:", ats);
-
-    setAtsData({
-  score: ats.score,
-  matchedSkills: ats.matchedSkills,
-  missingSkills: ats.missingSkills,
-});
+      setAtsData({
+        score: ats.score,
+        matchedSkills: ats.matchedSkills,
+        missingSkills: ats.missingSkills,
+      });
 
       /* STORE DATA */
 
@@ -486,12 +505,16 @@ const viewFile = () => {
             </h3>
 
             <p className="text-sm text-green-700">
-              AI analysis of resume quality
+              {atsRecalculating ? "Recalculating with AI…" : "AI analysis of resume quality"}
             </p>
           </div>
 
           <div className="text-3xl font-bold text-green-700">
-            {atsData.score}%
+            {atsRecalculating ? (
+              <span className="text-lg animate-pulse">…</span>
+            ) : (
+              `${atsData.score}%`
+            )}
           </div>
         </div>
 
@@ -620,7 +643,10 @@ const viewFile = () => {
                     {goal && (
                       <Button
                         type="button"
-                        onClick={() => setGoalLocked(true)}
+                        onClick={() => {
+                          setGoalLocked(true);
+                          recomputeAts(goal);
+                        }}
                         className="px-5 whitespace-nowrap"
                       >
                         Confirm
@@ -636,6 +662,7 @@ const viewFile = () => {
                           onClick={() => {
                             setGoal(g);
                             setGoalLocked(true);
+                            recomputeAts(g);
                           }}
                           className="text-xs bg-blue-50 text-blue-700 border border-blue-200 px-2 py-1 rounded-lg hover:bg-blue-100"
                         >

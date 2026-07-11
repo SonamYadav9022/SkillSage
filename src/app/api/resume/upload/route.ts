@@ -8,7 +8,8 @@ import { v2 as cloudinary } from "cloudinary";
 import { db } from "@/lib/db";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
-import { generateATSScore } from '@/lib/ats'
+import { computeATSScore } from '@/lib/ats'
+import { getRequiredSkillsForGoal } from '@/lib/groq-skills'
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -56,7 +57,7 @@ ${resumeText.slice(0, 5000)}`;
         Authorization: `Bearer ${apiKey}`,
       },
       body: JSON.stringify({
-        model: "llama-3.3-70b-versatile",
+        model: "openai/gpt-oss-120b",
         messages: [{ role: "user", content: prompt }],
         temperature: 0.1,
         max_tokens: 1500,
@@ -139,12 +140,12 @@ export async function POST(req: NextRequest) {
     const currentLevel: string = analysis?.level ?? "Beginner";
     const experience: string = analysis?.experience ?? existingUser?.experience ?? "Fresher";
     const education: string = analysis?.education ?? existingUser?.education ?? "";
-    const ats =
-  generateATSScore(
-    detectedSkills,
-    analysis?.suggestedGoals?.[0] ||
+    const careerGoalForScoring: string =
+      existingUser?.goal ||
+      analysis?.suggestedGoals?.[0] ||
       'Frontend Developer'
-  )
+    const requiredSkillsForGoal = await getRequiredSkillsForGoal(careerGoalForScoring)
+    const ats = computeATSScore(detectedSkills, requiredSkillsForGoal)
 
     // Store rich analysis in progressData (Json field — no schema change needed)
     const richAnalysis = {
