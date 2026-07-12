@@ -492,9 +492,9 @@ function SignupPageContent() {
             <span className="text-xs font-semibold text-blue-600 uppercase tracking-widest">
               Step {step} of {totalSteps}
             </span>
-            <span className="text-xs text-gray-400">{progress}% complete</span>
+            <span className="text-xs text-gray-400 dark:text-neutral-500">{progress}% complete</span>
           </div>
-          <div className="h-1.5 bg-blue-100 rounded-full overflow-hidden">
+          <div className="h-1.5 bg-blue-100 dark:bg-blue-900/40 rounded-full overflow-hidden">
             <div
               className="h-full bg-blue-600 rounded-full transition-all duration-500"
               style={{ width: `${progress}%` }}
@@ -503,15 +503,15 @@ function SignupPageContent() {
         </div>
 
         {/* ── Card ── */}
-        <div className="bg-white rounded-3xl shadow-xl px-8 py-10">
+        <div className="bg-white dark:bg-neutral-900 rounded-3xl shadow-xl px-8 py-10">
 
           {/* Step title */}
           {step > 1 && (
             <div className="mb-8 text-center">
-              <h2 className="text-2xl font-bold text-gray-900 mb-2">
+              <h2 className="text-2xl font-bold text-gray-900 dark:text-neutral-100 mb-2">
                 {stepTitles[step - 1]}
               </h2>
-              <p className="text-gray-500 text-sm">{stepSubtitles[step - 1]}</p>
+              <p className="text-gray-500 dark:text-neutral-400 text-sm">{stepSubtitles[step - 1]}</p>
             </div>
           )}
 
@@ -526,37 +526,37 @@ function SignupPageContent() {
           {step === 1 && (
             <form onSubmit={handleCredentials} className="space-y-4">
               <div className="text-center mb-8">
-                <h1 className="text-3xl font-bold text-gray-900 mb-1">
+                <h1 className="text-3xl font-bold text-gray-900 dark:text-neutral-100 mb-1">
                   Welcome to <span className="text-blue-600">SkillSage</span>
                 </h1>
-                <p className="text-gray-500 text-sm">Create your account and start your tech career journey</p>
+                <p className="text-gray-500 dark:text-neutral-400 text-sm">Create your account and start your tech career journey</p>
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1.5">Full Name</label>
+                <label className="block text-xs font-semibold text-gray-500 dark:text-neutral-400 uppercase tracking-wider mb-1.5">Full Name</label>
                 <input
                   placeholder="Full Name"
                   required
                   value={form.name}
                   onChange={(e) => set("name", e.target.value)}
-                  className="w-full h-12 px-4 rounded-xl border border-gray-200 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 text-gray-800 transition"
+                  className="w-full h-12 px-4 rounded-xl border border-gray-200 dark:border-neutral-700 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 text-gray-800 dark:text-neutral-200 transition"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1.5">Email Address</label>
+                <label className="block text-xs font-semibold text-gray-500 dark:text-neutral-400 uppercase tracking-wider mb-1.5">Email Address</label>
                 <input
                   type="email"
                   placeholder="Email"
                   required
                   value={form.email}
                   onChange={(e) => set("email", e.target.value)}
-                  className="w-full h-12 px-4 rounded-xl border border-gray-200 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 text-gray-800 transition"
+                  className="w-full h-12 px-4 rounded-xl border border-gray-200 dark:border-neutral-700 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 text-gray-800 dark:text-neutral-200 transition"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1.5">Password</label>
+                <label className="block text-xs font-semibold text-gray-500 dark:text-neutral-400 uppercase tracking-wider mb-1.5">Password</label>
                 <input
                   type="password"
                   placeholder="Password"
@@ -564,7 +564,7 @@ function SignupPageContent() {
                   required
                   value={form.password}
                   onChange={(e) => set("password", e.target.value)}
-                  className="w-full h-12 px-4 rounded-xl border border-gray-200 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 text-gray-800 transition"
+                  className="w-full h-12 px-4 rounded-xl border border-gray-200 dark:border-neutral-700 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 text-gray-800 dark:text-neutral-200 transition"
                 />
               </div>
 
@@ -578,22 +578,22 @@ function SignupPageContent() {
 
               {/* ── Divider ── */}
               <div className="flex items-center gap-3 my-2">
-                <div className="flex-1 h-px bg-gray-200" />
-                <span className="text-xs text-gray-400 font-medium">OR</span>
-                <div className="flex-1 h-px bg-gray-200" />
+                <div className="flex-1 h-px bg-gray-200 dark:bg-neutral-700" />
+                <span className="text-xs text-gray-400 dark:text-neutral-500 font-medium">OR</span>
+                <div className="flex-1 h-px bg-gray-200 dark:bg-neutral-700" />
               </div>
 
               {/* ── Google button ── */}
               <button
                 type="button"
                 onClick={() => signIn("google", { callbackUrl: "/dashboard" })}
-                className="w-full h-12 rounded-xl border border-gray-200 bg-white hover:bg-gray-50 flex items-center justify-center gap-3 font-semibold text-gray-700 transition"
+                className="w-full h-12 rounded-xl border border-gray-200 dark:border-neutral-700 bg-white dark:bg-neutral-900 hover:bg-gray-50 dark:hover:bg-neutral-800 flex items-center justify-center gap-3 font-semibold text-gray-700 dark:text-neutral-300 transition"
               >
                 <img src="https://www.svgrepo.com/show/475656/google-color.svg" className="w-5 h-5" alt="Google" />
                 Continue with Google
               </button>
 
-              <p className="text-center text-sm text-gray-500 mt-4">
+              <p className="text-center text-sm text-gray-500 dark:text-neutral-400 mt-4">
                 Already have an account?{" "}
                 <Link href="/login" className="text-blue-600 font-semibold hover:underline">
                   Login
@@ -606,7 +606,7 @@ function SignupPageContent() {
           {step === 2 && (
             <form onSubmit={handleAge} className="space-y-6">
               <div className="relative">
-                <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1.5">Your Age</label>
+                <label className="block text-xs font-semibold text-gray-500 dark:text-neutral-400 uppercase tracking-wider mb-1.5">Your Age</label>
                 <input
                   type="number"
                   min={15}
@@ -614,13 +614,13 @@ function SignupPageContent() {
                   placeholder="Enter age"
                   value={form.age}
                   onChange={(e) => set("age", e.target.value)}
-                  className="w-full h-14 px-4 text-2xl font-bold rounded-xl border border-gray-200 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 text-gray-800 transition"
+                  className="w-full h-14 px-4 text-2xl font-bold rounded-xl border border-gray-200 dark:border-neutral-700 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 text-gray-800 dark:text-neutral-200 transition"
                 />
-                <span className="absolute right-4 top-9 text-gray-400 text-sm">years old</span>
+                <span className="absolute right-4 top-9 text-gray-400 dark:text-neutral-500 text-sm">years old</span>
               </div>
-              <p className="text-xs text-gray-400 text-center">Valid range: 15 – 45 years</p>
+              <p className="text-xs text-gray-400 dark:text-neutral-500 text-center">Valid range: 15 – 45 years</p>
               <div className="flex gap-3">
-                <button type="button" onClick={goBack} className="flex-1 h-12 rounded-xl border border-gray-200 text-gray-500 font-medium hover:bg-gray-50 transition">
+                <button type="button" onClick={goBack} className="flex-1 h-12 rounded-xl border border-gray-200 dark:border-neutral-700 text-gray-500 dark:text-neutral-400 font-medium hover:bg-gray-50 dark:hover:bg-neutral-800 transition">
                   ← Back
                 </button>
                 <button type="submit" className="flex-2 flex-grow-[2] h-12 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold transition">
@@ -637,14 +637,14 @@ function SignupPageContent() {
                 <button
                   key={edu.value}
                   onClick={() => handleEducation(edu.value)}
-                  className={`w-full flex items-center gap-4 px-5 py-4 rounded-2xl border-2 text-left transition-all duration-200 hover:border-blue-400 hover:bg-blue-50 ${
+                  className={`w-full flex items-center gap-4 px-5 py-4 rounded-2xl border-2 text-left transition-all duration-200 hover:border-blue-400 hover:bg-blue-50 dark:bg-blue-950/40 ${
                     form.education === edu.value
-                      ? "border-blue-600 bg-blue-50"
-                      : "border-gray-200 bg-white"
+                      ? "border-blue-600 bg-blue-50 dark:bg-blue-950/40"
+                      : "border-gray-200 dark:border-neutral-700 bg-white dark:bg-neutral-900"
                   }`}
                 >
                   <span className="text-2xl">{edu.icon}</span>
-                  <span className="font-semibold text-gray-800 text-sm">{edu.label}</span>
+                  <span className="font-semibold text-gray-800 dark:text-neutral-200 text-sm">{edu.label}</span>
                   {form.education === edu.value && (
                     <span className="ml-auto text-blue-600 font-bold">✓</span>
                   )}
@@ -654,14 +654,14 @@ function SignupPageContent() {
               {/* OTHER */}
               <button
                 onClick={() => handleEducation(OTHER_VALUE)}
-                className={`w-full flex items-center gap-4 px-5 py-4 rounded-2xl border-2 text-left transition-all duration-200 hover:border-blue-400 hover:bg-blue-50 ${
+                className={`w-full flex items-center gap-4 px-5 py-4 rounded-2xl border-2 text-left transition-all duration-200 hover:border-blue-400 hover:bg-blue-50 dark:bg-blue-950/40 ${
                   form.education === OTHER_VALUE
-                    ? "border-blue-600 bg-blue-50"
-                    : "border-gray-200 bg-white"
+                    ? "border-blue-600 bg-blue-50 dark:bg-blue-950/40"
+                    : "border-gray-200 dark:border-neutral-700 bg-white dark:bg-neutral-900"
                 }`}
               >
                 <span className="text-2xl">✏️</span>
-                <span className="font-semibold text-gray-800 text-sm">Other — type your own</span>
+                <span className="font-semibold text-gray-800 dark:text-neutral-200 text-sm">Other — type your own</span>
                 {form.education === OTHER_VALUE && (
                   <span className="ml-auto text-blue-600 font-bold">✓</span>
                 )}
@@ -675,7 +675,7 @@ function SignupPageContent() {
                     value={otherInputs.education}
                     onChange={(e) => setOther("education", e.target.value)}
                     onKeyDown={(e) => e.key === "Enter" && confirmOtherEducation()}
-                    className="flex-1 h-12 px-4 rounded-xl border border-blue-200 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 text-gray-800 text-sm transition"
+                    className="flex-1 h-12 px-4 rounded-xl border border-blue-200 dark:border-blue-800 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 text-gray-800 dark:text-neutral-200 text-sm transition"
                   />
                   <button
                     type="button"
@@ -687,7 +687,7 @@ function SignupPageContent() {
                 </div>
               )}
 
-              <button type="button" onClick={goBack} className="w-full mt-2 h-11 rounded-xl border border-gray-200 text-gray-500 text-sm font-medium hover:bg-gray-50 transition">
+              <button type="button" onClick={goBack} className="w-full mt-2 h-11 rounded-xl border border-gray-200 dark:border-neutral-700 text-gray-500 dark:text-neutral-400 text-sm font-medium hover:bg-gray-50 dark:hover:bg-neutral-800 transition">
                 ← Back
               </button>
             </div>
@@ -701,14 +701,14 @@ function SignupPageContent() {
                   <button
                     key={domain}
                     onClick={() => handleDomain(domain)}
-                    className={`w-full flex items-center gap-4 px-5 py-3.5 rounded-2xl border-2 text-left transition-all duration-200 hover:border-blue-400 hover:bg-blue-50 ${
+                    className={`w-full flex items-center gap-4 px-5 py-3.5 rounded-2xl border-2 text-left transition-all duration-200 hover:border-blue-400 hover:bg-blue-50 dark:bg-blue-950/40 ${
                       form.field === domain
-                        ? "border-blue-600 bg-blue-50"
-                        : "border-gray-200 bg-white"
+                        ? "border-blue-600 bg-blue-50 dark:bg-blue-950/40"
+                        : "border-gray-200 dark:border-neutral-700 bg-white dark:bg-neutral-900"
                     }`}
                   >
                     <span className="text-xl">{icon}</span>
-                    <span className="font-semibold text-gray-800 text-sm">{domain}</span>
+                    <span className="font-semibold text-gray-800 dark:text-neutral-200 text-sm">{domain}</span>
                     {form.field === domain && (
                       <span className="ml-auto text-blue-600 font-bold">✓</span>
                     )}
@@ -718,14 +718,14 @@ function SignupPageContent() {
                 {/* OTHER */}
                 <button
                   onClick={() => handleDomain(OTHER_VALUE)}
-                  className={`w-full flex items-center gap-4 px-5 py-3.5 rounded-2xl border-2 text-left transition-all duration-200 hover:border-blue-400 hover:bg-blue-50 ${
+                  className={`w-full flex items-center gap-4 px-5 py-3.5 rounded-2xl border-2 text-left transition-all duration-200 hover:border-blue-400 hover:bg-blue-50 dark:bg-blue-950/40 ${
                     form.field === OTHER_VALUE
-                      ? "border-blue-600 bg-blue-50"
-                      : "border-gray-200 bg-white"
+                      ? "border-blue-600 bg-blue-50 dark:bg-blue-950/40"
+                      : "border-gray-200 dark:border-neutral-700 bg-white dark:bg-neutral-900"
                   }`}
                 >
                   <span className="text-xl">✏️</span>
-                  <span className="font-semibold text-gray-800 text-sm">Other — type your own</span>
+                  <span className="font-semibold text-gray-800 dark:text-neutral-200 text-sm">Other — type your own</span>
                   {form.field === OTHER_VALUE && (
                     <span className="ml-auto text-blue-600 font-bold">✓</span>
                   )}
@@ -740,7 +740,7 @@ function SignupPageContent() {
                     value={otherInputs.field}
                     onChange={(e) => setOther("field", e.target.value)}
                     onKeyDown={(e) => e.key === "Enter" && confirmOtherDomain()}
-                    className="flex-1 h-12 px-4 rounded-xl border border-blue-200 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 text-gray-800 text-sm transition"
+                    className="flex-1 h-12 px-4 rounded-xl border border-blue-200 dark:border-blue-800 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 text-gray-800 dark:text-neutral-200 text-sm transition"
                   />
                   <button
                     type="button"
@@ -752,7 +752,7 @@ function SignupPageContent() {
                 </div>
               )}
 
-              <button type="button" onClick={goBack} className="w-full mt-2 h-11 rounded-xl border border-gray-200 text-gray-500 text-sm font-medium hover:bg-gray-50 transition">
+              <button type="button" onClick={goBack} className="w-full mt-2 h-11 rounded-xl border border-gray-200 dark:border-neutral-700 text-gray-500 dark:text-neutral-400 text-sm font-medium hover:bg-gray-50 dark:hover:bg-neutral-800 transition">
                 ← Back
               </button>
             </div>
@@ -770,7 +770,7 @@ function SignupPageContent() {
                     className={`px-4 py-2 rounded-full text-sm font-medium border-2 transition-all duration-200 ${
                       selectedSkills.includes(skill)
                         ? "bg-blue-600 border-blue-600 text-white shadow-md"
-                        : "bg-white border-gray-200 text-gray-700 hover:border-blue-300 hover:bg-blue-50"
+                        : "bg-white dark:bg-neutral-900 border-gray-200 dark:border-neutral-700 text-gray-700 dark:text-neutral-300 hover:border-blue-300 hover:bg-blue-50 dark:bg-blue-950/40"
                     }`}
                   >
                     {selectedSkills.includes(skill) ? "✓ " : ""}{skill}
@@ -780,14 +780,14 @@ function SignupPageContent() {
 
               {/* OTHER — free text skill not in the list */}
               <div>
-                <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1.5">
+                <label className="block text-xs font-semibold text-gray-500 dark:text-neutral-400 uppercase tracking-wider mb-1.5">
                   Don't see your skill? Add it
                 </label>
                 <input
                   placeholder="Add your skills"
                   value={otherInputs.skill}
                   onChange={(e) => setOther("skill", e.target.value)}
-                  className="w-full h-12 px-4 rounded-xl border border-gray-200 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 text-gray-800 text-sm transition"
+                  className="w-full h-12 px-4 rounded-xl border border-gray-200 dark:border-neutral-700 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 text-gray-800 dark:text-neutral-200 text-sm transition"
                 />
               </div>
 
@@ -799,7 +799,7 @@ function SignupPageContent() {
               )}
 
               <div className="flex gap-3 pt-2">
-                <button type="button" onClick={goBack} className="flex-1 h-12 rounded-xl border border-gray-200 text-gray-500 font-medium hover:bg-gray-50 transition">
+                <button type="button" onClick={goBack} className="flex-1 h-12 rounded-xl border border-gray-200 dark:border-neutral-700 text-gray-500 dark:text-neutral-400 font-medium hover:bg-gray-50 dark:hover:bg-neutral-800 transition">
                   ← Back
                 </button>
                 <button type="submit" className="flex-grow-[2] h-12 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold transition">
@@ -816,14 +816,14 @@ function SignupPageContent() {
                 <button
                   key={g.value}
                   onClick={() => handleGoal(g.value)}
-                  className={`relative w-full flex flex-col gap-0.5 px-5 py-4 rounded-2xl border-2 text-left transition-all duration-200 hover:border-blue-400 hover:bg-blue-50 ${
+                  className={`relative w-full flex flex-col gap-0.5 px-5 py-4 rounded-2xl border-2 text-left transition-all duration-200 hover:border-blue-400 hover:bg-blue-50 dark:bg-blue-950/40 ${
                     form.goal === g.value
-                      ? "border-blue-600 bg-blue-50"
-                      : "border-gray-200 bg-white"
+                      ? "border-blue-600 bg-blue-50 dark:bg-blue-950/40"
+                      : "border-gray-200 dark:border-neutral-700 bg-white dark:bg-neutral-900"
                   }`}
                 >
-                  <span className="font-bold text-gray-900 text-sm">{g.value}</span>
-                  <span className="text-xs text-gray-500">{g.desc}</span>
+                  <span className="font-bold text-gray-900 dark:text-neutral-100 text-sm">{g.value}</span>
+                  <span className="text-xs text-gray-500 dark:text-neutral-400">{g.desc}</span>
                   {form.goal === g.value && (
                     <span className="absolute right-5 top-4 text-blue-600 font-bold">✓</span>
                   )}
@@ -833,14 +833,14 @@ function SignupPageContent() {
               {/* OTHER */}
               <button
                 onClick={() => handleGoal(OTHER_VALUE)}
-                className={`relative w-full flex flex-col gap-0.5 px-5 py-4 rounded-2xl border-2 text-left transition-all duration-200 hover:border-blue-400 hover:bg-blue-50 ${
+                className={`relative w-full flex flex-col gap-0.5 px-5 py-4 rounded-2xl border-2 text-left transition-all duration-200 hover:border-blue-400 hover:bg-blue-50 dark:bg-blue-950/40 ${
                   form.goal === OTHER_VALUE
-                    ? "border-blue-600 bg-blue-50"
-                    : "border-gray-200 bg-white"
+                    ? "border-blue-600 bg-blue-50 dark:bg-blue-950/40"
+                    : "border-gray-200 dark:border-neutral-700 bg-white dark:bg-neutral-900"
                 }`}
               >
-                <span className="font-bold text-gray-900 text-sm">Other — type your own</span>
-                <span className="text-xs text-gray-500">Not seeing your target role? Specify it yourself</span>
+                <span className="font-bold text-gray-900 dark:text-neutral-100 text-sm">Other — type your own</span>
+                <span className="text-xs text-gray-500 dark:text-neutral-400">Not seeing your target role? Specify it yourself</span>
                 {form.goal === OTHER_VALUE && (
                   <span className="absolute right-5 top-4 text-blue-600 font-bold">✓</span>
                 )}
@@ -854,7 +854,7 @@ function SignupPageContent() {
                     value={otherInputs.goal}
                     onChange={(e) => setOther("goal", e.target.value)}
                     onKeyDown={(e) => e.key === "Enter" && confirmOtherGoal()}
-                    className="flex-1 h-12 px-4 rounded-xl border border-blue-200 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 text-gray-800 text-sm transition"
+                    className="flex-1 h-12 px-4 rounded-xl border border-blue-200 dark:border-blue-800 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 text-gray-800 dark:text-neutral-200 text-sm transition"
                   />
                   <button
                     type="button"
@@ -866,7 +866,7 @@ function SignupPageContent() {
                 </div>
               )}
 
-              <button type="button" onClick={goBack} className="w-full mt-2 h-11 rounded-xl border border-gray-200 text-gray-500 text-sm font-medium hover:bg-gray-50 transition">
+              <button type="button" onClick={goBack} className="w-full mt-2 h-11 rounded-xl border border-gray-200 dark:border-neutral-700 text-gray-500 dark:text-neutral-400 text-sm font-medium hover:bg-gray-50 dark:hover:bg-neutral-800 transition">
                 ← Back
               </button>
             </div>
@@ -877,9 +877,9 @@ function SignupPageContent() {
             <div className="space-y-4">
               {loading ? (
                 <div className="py-12 text-center space-y-4">
-                  <div className="w-12 h-12 rounded-full border-4 border-blue-200 border-t-blue-600 animate-spin mx-auto" />
-                  <p className="text-gray-600 font-medium">Creating your profile...</p>
-                  <p className="text-gray-400 text-sm">Setting up your personalized roadmap</p>
+                  <div className="w-12 h-12 rounded-full border-4 border-blue-200 dark:border-blue-800 border-t-blue-600 animate-spin mx-auto" />
+                  <p className="text-gray-600 dark:text-neutral-300 font-medium">Creating your profile...</p>
+                  <p className="text-gray-400 dark:text-neutral-500 text-sm">Setting up your personalized roadmap</p>
                 </div>
               ) : (
                 <>
@@ -887,16 +887,16 @@ function SignupPageContent() {
                     <button
                       key={level.value}
                       onClick={() => handleLevel(level.value)}
-                      className={`w-full flex items-start gap-4 px-5 py-5 rounded-2xl border-2 text-left transition-all duration-200 hover:border-blue-400 hover:bg-blue-50 ${
+                      className={`w-full flex items-start gap-4 px-5 py-5 rounded-2xl border-2 text-left transition-all duration-200 hover:border-blue-400 hover:bg-blue-50 dark:bg-blue-950/40 ${
                         form.level === level.value
-                          ? "border-blue-600 bg-blue-50"
-                          : "border-gray-200 bg-white"
+                          ? "border-blue-600 bg-blue-50 dark:bg-blue-950/40"
+                          : "border-gray-200 dark:border-neutral-700 bg-white dark:bg-neutral-900"
                       }`}
                     >
                       <span className="text-3xl mt-0.5">{level.icon}</span>
                       <div>
-                        <p className="font-bold text-gray-900">{level.label}</p>
-                        <p className="text-xs text-gray-500 mt-0.5 leading-relaxed">{level.desc}</p>
+                        <p className="font-bold text-gray-900 dark:text-neutral-100">{level.label}</p>
+                        <p className="text-xs text-gray-500 dark:text-neutral-400 mt-0.5 leading-relaxed">{level.desc}</p>
                       </div>
                     </button>
                   ))}
@@ -904,16 +904,16 @@ function SignupPageContent() {
                   {/* OTHER */}
                   <button
                     onClick={() => handleLevel(OTHER_VALUE)}
-                    className={`w-full flex items-start gap-4 px-5 py-5 rounded-2xl border-2 text-left transition-all duration-200 hover:border-blue-400 hover:bg-blue-50 ${
+                    className={`w-full flex items-start gap-4 px-5 py-5 rounded-2xl border-2 text-left transition-all duration-200 hover:border-blue-400 hover:bg-blue-50 dark:bg-blue-950/40 ${
                       form.level === OTHER_VALUE
-                        ? "border-blue-600 bg-blue-50"
-                        : "border-gray-200 bg-white"
+                        ? "border-blue-600 bg-blue-50 dark:bg-blue-950/40"
+                        : "border-gray-200 dark:border-neutral-700 bg-white dark:bg-neutral-900"
                     }`}
                   >
                     <span className="text-3xl mt-0.5">✏️</span>
                     <div>
-                      <p className="font-bold text-gray-900">Other — describe it myself</p>
-                      <p className="text-xs text-gray-500 mt-0.5 leading-relaxed">
+                      <p className="font-bold text-gray-900 dark:text-neutral-100">Other — describe it myself</p>
+                      <p className="text-xs text-gray-500 dark:text-neutral-400 mt-0.5 leading-relaxed">
                         None of these quite fit? Tell us in your own words
                       </p>
                     </div>
@@ -927,7 +927,7 @@ function SignupPageContent() {
                         value={otherInputs.level}
                         onChange={(e) => setOther("level", e.target.value)}
                         onKeyDown={(e) => e.key === "Enter" && confirmOtherLevel()}
-                        className="flex-1 h-12 px-4 rounded-xl border border-blue-200 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 text-gray-800 text-sm transition"
+                        className="flex-1 h-12 px-4 rounded-xl border border-blue-200 dark:border-blue-800 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 text-gray-800 dark:text-neutral-200 text-sm transition"
                       />
                       <button
                         type="button"
@@ -939,7 +939,7 @@ function SignupPageContent() {
                     </div>
                   )}
 
-                  <button type="button" onClick={goBack} className="w-full mt-1 h-11 rounded-xl border border-gray-200 text-gray-500 text-sm font-medium hover:bg-gray-50 transition">
+                  <button type="button" onClick={goBack} className="w-full mt-1 h-11 rounded-xl border border-gray-200 dark:border-neutral-700 text-gray-500 dark:text-neutral-400 text-sm font-medium hover:bg-gray-50 dark:hover:bg-neutral-800 transition">
                     ← Back
                   </button>
                 </>
@@ -958,7 +958,7 @@ function SignupPageContent() {
                   ? "w-6 h-2 bg-blue-600"
                   : i + 1 < step
                   ? "w-2 h-2 bg-blue-400"
-                  : "w-2 h-2 bg-gray-300"
+                  : "w-2 h-2 bg-gray-300 dark:bg-neutral-700"
               }`}
             />
           ))}
