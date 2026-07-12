@@ -23,7 +23,7 @@ function Progress({
       <ProgressPrimitive.Root
         data-slot="progress"
         className={cn(
-          "relative h-3 w-full overflow-hidden rounded-full bg-gray-200",
+          "relative h-3 w-full overflow-hidden rounded-full bg-gray-200 dark:bg-neutral-700",
           className
         )}
         {...props}
@@ -45,7 +45,7 @@ function Progress({
 
       {showValue && (
         <div className="mt-2 flex justify-end">
-          <span className="text-xs font-medium text-gray-600">
+          <span className="text-xs font-medium text-gray-600 dark:text-neutral-300">
             {value}%
           </span>
         </div>

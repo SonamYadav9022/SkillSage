@@ -8,7 +8,7 @@ export default function SkillGapCard({
   missing,
 }: Props) {
   return (
-    <div className="bg-white rounded-xl p-6 shadow">
+    <div className="bg-white dark:bg-neutral-900 rounded-xl p-6 shadow">
 
       <h2 className="text-2xl font-bold mb-4">
         Skill Analysis

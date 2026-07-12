@@ -458,7 +458,7 @@ export default function AICompanion({
                         msg.role ===
                         'user'
                           ? 'bg-blue-600 text-white rounded-tr-sm'
-                          : 'bg-gray-100 text-gray-800 rounded-tl-sm'
+                          : 'bg-gray-100 dark:bg-neutral-800 text-gray-800 dark:text-neutral-200 rounded-tl-sm'
                       }`}
                     >
                       {msg.content}
@@ -466,8 +466,8 @@ export default function AICompanion({
 
                     {msg.role ===
                       'user' && (
-                      <div className="w-7 h-7 rounded-full bg-gray-300 flex items-center justify-center flex-shrink-0 mt-1">
-                        <User className="w-4 h-4 text-gray-600" />
+                      <div className="w-7 h-7 rounded-full bg-gray-300 dark:bg-neutral-600 flex items-center justify-center flex-shrink-0 mt-1">
+                        <User className="w-4 h-4 text-gray-600 dark:text-neutral-300" />
                       </div>
                     )}
                   </div>
@@ -483,7 +483,7 @@ export default function AICompanion({
                     <Bot className="w-4 h-4 text-white" />
                   </div>
 
-                  <div className="bg-gray-100 rounded-2xl rounded-tl-sm px-4 py-3">
+                  <div className="bg-gray-100 dark:bg-neutral-800 rounded-2xl rounded-tl-sm px-4 py-3">
                     Thinking...
                   </div>
                 </div>
@@ -532,7 +532,7 @@ export default function AICompanion({
       className={`absolute right-4 top-1/2 -translate-y-1/2 z-50 transition ${
         isListening
           ? 'text-red-500'
-          : 'text-gray-500'
+          : 'text-gray-500 dark:text-neutral-400'
       }`}
     >
       <Mic className="w-5 h-5" />

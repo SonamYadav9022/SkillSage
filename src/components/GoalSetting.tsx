@@ -150,17 +150,17 @@ export default function GoalSetting({
           Plan Your Timeline
         </h2>
 
-        <p className="text-gray-500">
+        <p className="text-gray-500 dark:text-neutral-400">
           Your goal is already set — now tell us your pace so we can build the right roadmap
         </p>
 
       </div>
 
       {/* ── Locked-in goal, carried over from Upload Resume step ── */}
-      <div className="bg-white rounded-3xl border p-6">
+      <div className="bg-white dark:bg-neutral-900 rounded-3xl border p-6">
 
         <div className="flex items-center justify-between mb-1">
-          <h3 className="text-lg font-semibold text-gray-500">
+          <h3 className="text-lg font-semibold text-gray-500 dark:text-neutral-400">
             Your Career Goal
           </h3>
 
@@ -176,7 +176,7 @@ export default function GoalSetting({
         </div>
 
         {goal ? (
-          <div className="flex items-center gap-3 mt-2 p-4 rounded-xl bg-gray-50 border">
+          <div className="flex items-center gap-3 mt-2 p-4 rounded-xl bg-gray-50 dark:bg-neutral-950 border">
             <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0" />
             <span className="text-xl font-bold">
               {goal}
@@ -207,7 +207,7 @@ export default function GoalSetting({
         </div>
       )}
 
-      <div className="bg-white rounded-3xl border p-6">
+      <div className="bg-white dark:bg-neutral-900 rounded-3xl border p-6">
 
         <h3 className="text-xl font-bold mb-6">
           Select Timeline
@@ -234,8 +234,8 @@ export default function GoalSetting({
 
                 ${
                   selectedDuration === duration
-                    ? "border-blue-600 bg-blue-50"
-                    : "border-gray-200 bg-white"
+                    ? "border-blue-600 bg-blue-50 dark:bg-blue-950/40"
+                    : "border-gray-200 dark:border-neutral-700 bg-white dark:bg-neutral-900"
                 }
               `}
             >
@@ -254,13 +254,13 @@ export default function GoalSetting({
 
       </div>
 
-      <div className="bg-white rounded-3xl border p-6">
+      <div className="bg-white dark:bg-neutral-900 rounded-3xl border p-6">
 
         <h3 className="text-xl font-bold mb-1">
           Weekly Time Commitment
         </h3>
 
-        <p className="text-gray-500 mb-6">
+        <p className="text-gray-500 dark:text-neutral-400 mb-6">
           How much time can you realistically dedicate each week?
         </p>
 
@@ -284,8 +284,8 @@ export default function GoalSetting({
 
                 ${
                   selectedWeeklyHours === opt.value
-                    ? "border-blue-600 bg-blue-50"
-                    : "border-gray-200 bg-white"
+                    ? "border-blue-600 bg-blue-50 dark:bg-blue-950/40"
+                    : "border-gray-200 dark:border-neutral-700 bg-white dark:bg-neutral-900"
                 }
               `}
             >
@@ -300,7 +300,7 @@ export default function GoalSetting({
                 )}
               </div>
 
-              <p className="text-sm text-gray-500 mt-1">
+              <p className="text-sm text-gray-500 dark:text-neutral-400 mt-1">
                 {opt.desc}
               </p>
 
@@ -310,7 +310,7 @@ export default function GoalSetting({
 
       </div>
 
-      <div className="bg-white rounded-3xl border p-8">
+      <div className="bg-white dark:bg-neutral-900 rounded-3xl border p-8">
 
         <h2 className="text-2xl font-bold mb-6">
           Generate Career Roadmap

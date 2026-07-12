@@ -8,7 +8,7 @@ export default function ReadinessScore({
   level,
 }: Props) {
   return (
-    <div className="bg-white rounded-2xl p-6 shadow border">
+    <div className="bg-white dark:bg-neutral-900 rounded-2xl p-6 shadow border">
 
       <h2 className="text-2xl font-bold mb-4">
         Job Readiness
@@ -18,7 +18,7 @@ export default function ReadinessScore({
 
         <div className="relative w-32 h-32">
 
-          <div className="w-32 h-32 rounded-full border-8 border-blue-200 flex items-center justify-center">
+          <div className="w-32 h-32 rounded-full border-8 border-blue-200 dark:border-blue-800 flex items-center justify-center">
 
             <div className="text-center">
 
@@ -26,7 +26,7 @@ export default function ReadinessScore({
                 {score}%
               </div>
 
-              <div className="text-xs text-gray-500">
+              <div className="text-xs text-gray-500 dark:text-neutral-400">
                 Ready
               </div>
 

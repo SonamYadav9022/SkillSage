@@ -10,7 +10,7 @@ export default function SkillAnalysisCard({
   missing,
 }: Props) {
   return (
-    <div className="bg-white rounded-xl p-6 shadow">
+    <div className="bg-white dark:bg-neutral-900 rounded-xl p-6 shadow">
 
       <h2 className="text-2xl font-bold mb-6">
         Resume Intelligence
@@ -25,7 +25,7 @@ export default function SkillAnalysisCard({
           {skills.map(skill => (
             <span
               key={skill}
-              className="px-3 py-1 bg-blue-100 rounded-full"
+              className="px-3 py-1 bg-blue-100 dark:bg-blue-900/40 rounded-full"
             >
               {skill}
             </span>

@@ -28,8 +28,8 @@ export default function RoadmapDisplay({ roadmap, onStartLearning }: Props) {
         <CardContent className="p-8">
           <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-5">
             <div>
-              <h1 className="text-4xl font-bold text-gray-900">{roadmap.title}</h1>
-              <p className="text-gray-600 mt-3 text-lg">Personalized AI-generated career roadmap</p>
+              <h1 className="text-4xl font-bold text-gray-900 dark:text-neutral-100">{roadmap.title}</h1>
+              <p className="text-gray-600 dark:text-neutral-300 mt-3 text-lg">Personalized AI-generated career roadmap</p>
             </div>
             <div className="flex flex-wrap gap-3">
               <Badge className="bg-blue-600 text-white text-sm px-4 py-2">
@@ -99,14 +99,14 @@ export default function RoadmapDisplay({ roadmap, onStartLearning }: Props) {
                 <p className="font-semibold text-base mb-1">
                   {readiness >= 70 ? "Well prepared!" : readiness >= 40 ? "Good foundation" : "Starting fresh"}
                 </p>
-                <p className="text-gray-500 text-sm">
+                <p className="text-gray-500 dark:text-neutral-400 text-sm">
                   {readiness >= 70
                     ? "You already have most skills. Focus on the gaps."
                     : readiness >= 40
                     ? "You have key fundamentals. Time to build on them."
                     : "Great time to build strong foundations from scratch."}
                 </p>
-                <div className="mt-3 h-2 rounded-full bg-gray-200 w-full">
+                <div className="mt-3 h-2 rounded-full bg-gray-200 dark:bg-neutral-700 w-full">
                   <div
                     className={`h-2 rounded-full ${readinessBg} transition-all duration-700`}
                     style={{ width: `${readiness}%` }}
@@ -156,7 +156,7 @@ export default function RoadmapDisplay({ roadmap, onStartLearning }: Props) {
                 </Badge>
               ))}
             </div>
-            <p className="text-sm text-gray-500 mt-3">
+            <p className="text-sm text-gray-500 dark:text-neutral-400 mt-3">
               Your roadmap below covers each of these gaps phase by phase.
             </p>
           </CardContent>
@@ -194,7 +194,7 @@ export default function RoadmapDisplay({ roadmap, onStartLearning }: Props) {
               <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
                 <div className="flex-1">
                   <CardTitle className="text-2xl">{milestone.level}</CardTitle>
-                  <p className="text-gray-500 mt-1 text-sm">{milestone.duration}</p>
+                  <p className="text-gray-500 dark:text-neutral-400 mt-1 text-sm">{milestone.duration}</p>
                   {/* Why this phase matters for THIS student */}
                   {milestone.why && (
                     <p className="text-blue-700 dark:text-blue-300 mt-3 text-sm italic bg-blue-100 dark:bg-blue-900 px-3 py-2 rounded-lg">
@@ -219,7 +219,7 @@ export default function RoadmapDisplay({ roadmap, onStartLearning }: Props) {
                   </h3>
                   <div className="flex flex-wrap gap-3">
                     {milestone.skills.map((skill: string, i: number) => (
-                      <Badge key={i} className="bg-gray-100 text-black border px-3 py-1">{skill}</Badge>
+                      <Badge key={i} className="bg-gray-100 dark:bg-neutral-800 text-black border px-3 py-1">{skill}</Badge>
                     ))}
                   </div>
                 </div>

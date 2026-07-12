@@ -8,7 +8,7 @@ export default function RoadmapJourney({
   if (!roadmap) return null;
 
   return (
-    <div className="bg-white rounded-2xl p-8 shadow border">
+    <div className="bg-white dark:bg-neutral-900 rounded-2xl p-8 shadow border">
       <h2 className="text-3xl font-bold mb-8">
         Career Journey
       </h2>
@@ -27,12 +27,12 @@ export default function RoadmapJourney({
                 {index + 1}
               </div>
 
-              <div className="flex-1 border rounded-xl p-5 bg-gray-50">
+              <div className="flex-1 border rounded-xl p-5 bg-gray-50 dark:bg-neutral-950">
                 <h3 className="font-bold text-lg">
                   {milestone.level}
                 </h3>
 
-                <p className="text-gray-500">
+                <p className="text-gray-500 dark:text-neutral-400">
                   {milestone.duration}
                 </p>
               </div>

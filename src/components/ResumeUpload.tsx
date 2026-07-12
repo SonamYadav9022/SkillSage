@@ -418,15 +418,15 @@ const viewFile = () => {
             {!uploadedFile ? (
               <div
                 className={`border-2 border-dashed rounded-2xl p-10 text-center transition ${
-                  isDragging ? "border-blue-500 bg-blue-50" : "border-gray-300"
+                  isDragging ? "border-blue-500 bg-blue-50 dark:bg-blue-950/40" : "border-gray-300 dark:border-neutral-600"
                 }`}
                 onDragOver={handleDragOver}
                 onDragLeave={handleDragLeave}
                 onDrop={handleDrop}
               >
-                <FileText className="w-14 h-14 mx-auto mb-4 text-gray-400" />
+                <FileText className="w-14 h-14 mx-auto mb-4 text-gray-400 dark:text-neutral-500" />
                 <p className="text-[22px] font-medium mb-2">Drop your resume here</p>
-                <p className="text-gray-500 mb-5">or</p>
+                <p className="text-gray-500 dark:text-neutral-400 mb-5">or</p>
                 <label className="cursor-pointer">
                   <input
                     type="file"
@@ -434,29 +434,29 @@ const viewFile = () => {
                     onChange={handleFileSelect}
                     className="hidden"
                   />
-                  <span className="inline-block px-6 py-3 border rounded-xl hover:bg-gray-100 transition">
+                  <span className="inline-block px-6 py-3 border rounded-xl hover:bg-gray-100 dark:hover:bg-neutral-800 transition">
                     Browse Files
                   </span>
                 </label>
-                <p className="text-sm text-gray-400 mt-5">PDF, DOC, DOCX — Max 2MB</p>
+                <p className="text-sm text-gray-400 dark:text-neutral-500 mt-5">PDF, DOC, DOCX — Max 2MB</p>
               </div>
             ) : (
               <div className="space-y-4">
-                <div className="p-4 rounded-xl bg-gray-50 flex items-center justify-between">
+                <div className="p-4 rounded-xl bg-gray-50 dark:bg-neutral-950 flex items-center justify-between">
                   <div className="flex gap-3 items-center">
                     <FileText className="w-8 h-8 text-blue-600" />
                     <div>
                       <p className="font-semibold">{uploadedFile.name}</p>
-                      <p className="text-sm text-gray-500">
+                      <p className="text-sm text-gray-500 dark:text-neutral-400">
                         {uploadedFile.size ? `${(uploadedFile.size / 1024 / 1024).toFixed(1)} MB` : "Saved File"}
                       </p>
                     </div>
                   </div>
                   <div className="flex gap-2">
-                    <button onClick={viewFile} className="p-2 hover:bg-gray-200 rounded-lg">
+                    <button onClick={viewFile} className="p-2 hover:bg-gray-200 dark:hover:bg-neutral-700 rounded-lg">
                       <Eye className="w-4 h-4" />
                     </button>
-                    <button onClick={removeFile} className="p-2 hover:bg-gray-200 rounded-lg">
+                    <button onClick={removeFile} className="p-2 hover:bg-gray-200 dark:hover:bg-neutral-700 rounded-lg">
                       <X className="w-4 h-4" />
                     </button>
                   </div>
@@ -478,7 +478,7 @@ const viewFile = () => {
                    ? "bg-green-50 text-green-700"
                    : msgType === "error"
                    ? "bg-red-50 text-red-700"
-                   : "bg-blue-50 text-blue-700"
+                   : "bg-blue-50 dark:bg-blue-950/40 text-blue-700 dark:text-blue-300"
                }`}
              >
                {msgType === "error" ? (
@@ -539,7 +539,7 @@ const viewFile = () => {
         )
       )
     ) : (
-      <p className="text-sm text-gray-500">
+      <p className="text-sm text-gray-500 dark:text-neutral-400">
         No matched skills found
       </p>
     )}
@@ -566,7 +566,7 @@ const viewFile = () => {
         )
       )
     ) : (
-      <p className="text-sm text-gray-500">
+      <p className="text-sm text-gray-500 dark:text-neutral-400">
         No missing skills 🎉
       </p>
     )}
@@ -627,8 +627,8 @@ const viewFile = () => {
               </div>
 
               {goalLocked && goal ? (
-                <div className="mt-2 flex items-center justify-between p-4 rounded-xl border bg-gray-50">
-                  <span className="font-medium text-gray-800">{goal}</span>
+                <div className="mt-2 flex items-center justify-between p-4 rounded-xl border bg-gray-50 dark:bg-neutral-950">
+                  <span className="font-medium text-gray-800 dark:text-neutral-200">{goal}</span>
                   <CheckCircle className="w-4 h-4 text-green-600 flex-shrink-0" />
                 </div>
               ) : (
@@ -655,7 +655,7 @@ const viewFile = () => {
                   </div>
                   {suggestedGoals.length > 0 && (
                     <div className="mt-2 flex flex-wrap gap-2">
-                      <span className="text-xs text-gray-500">AI suggests:</span>
+                      <span className="text-xs text-gray-500 dark:text-neutral-400">AI suggests:</span>
                       {suggestedGoals.map((g, i) => (
                         <button
                           key={i}
@@ -664,7 +664,7 @@ const viewFile = () => {
                             setGoalLocked(true);
                             recomputeAts(g);
                           }}
-                          className="text-xs bg-blue-50 text-blue-700 border border-blue-200 px-2 py-1 rounded-lg hover:bg-blue-100"
+                          className="text-xs bg-blue-50 dark:bg-blue-950/40 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-800 px-2 py-1 rounded-lg hover:bg-blue-100 dark:hover:bg-blue-900/40"
                         >
                           {g}
                         </button>
@@ -709,7 +709,7 @@ const viewFile = () => {
 
       {/* ── AI-extracted skills preview ──────────────────────── */}
       {detectedSkills.length > 0 && resumeSummary && (
-        <Card className="border-blue-100 bg-blue-50">
+        <Card className="border-blue-100 bg-blue-50 dark:bg-blue-950/40">
           <CardContent className="p-6">
             <div className="flex items-center gap-2 mb-4">
               <Sparkles className="w-5 h-5 text-blue-600" />
@@ -724,12 +724,12 @@ const viewFile = () => {
             )}
 
             <div>
-              <p className="text-xs font-semibold text-blue-700 mb-2 uppercase tracking-wide">
+              <p className="text-xs font-semibold text-blue-700 dark:text-blue-300 mb-2 uppercase tracking-wide">
                 Skills detected ({detectedSkills.length})
               </p>
               <div className="flex flex-wrap gap-2">
                 {detectedSkills.map((skill, i) => (
-                  <Badge key={i} className="bg-white text-blue-800 border border-blue-200 text-xs">
+                  <Badge key={i} className="bg-white dark:bg-neutral-900 text-blue-800 border border-blue-200 dark:border-blue-800 text-xs">
                     {skill}
                   </Badge>
                 ))}

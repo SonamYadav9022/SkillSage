@@ -321,7 +321,7 @@ const newHours =
           <CardContent className="p-4 flex gap-2 items-center">
             <Target className="w-8 h-8 text-blue-600" />
             <div>
-              <p className="text-sm text-gray-600">
+              <p className="text-sm text-gray-600 dark:text-neutral-300">
                 Progress
               </p>
               <p className="text-2xl font-bold">
@@ -335,7 +335,7 @@ const newHours =
           <CardContent className="p-4 flex gap-2 items-center">
             <Calendar className="w-8 h-8 text-green-600" />
             <div>
-              <p className="text-sm text-gray-600">
+              <p className="text-sm text-gray-600 dark:text-neutral-300">
                 Weeks Done
               </p>
               <p className="text-2xl font-bold">
@@ -351,7 +351,7 @@ const newHours =
           <CardContent className="p-4 flex gap-2 items-center">
             <Clock className="w-8 h-8 text-purple-600" />
             <div>
-              <p className="text-sm text-gray-600">
+              <p className="text-sm text-gray-600 dark:text-neutral-300">
                 Hours
               </p>
               <p className="text-2xl font-bold">
@@ -365,7 +365,7 @@ const newHours =
           <CardContent className="p-4 flex gap-2 items-center">
             <Award className="w-8 h-8 text-yellow-600" />
             <div>
-              <p className="text-sm text-gray-600">
+              <p className="text-sm text-gray-600 dark:text-neutral-300">
                 Milestones
               </p>
               <p className="text-2xl font-bold">
@@ -493,7 +493,7 @@ const newHours =
                         {week.completed ? (
                           <CheckCircle className="w-6 h-6 text-green-500" />
                         ) : (
-                          <Circle className="w-6 h-6 text-gray-400" />
+                          <Circle className="w-6 h-6 text-gray-400 dark:text-neutral-500" />
                         )}
 
                         <div>
@@ -508,7 +508,7 @@ const newHours =
                             }
                           </h4>
 
-                          <p className="text-sm text-gray-600">
+                          <p className="text-sm text-gray-600 dark:text-neutral-300">
                             {
                               week.hours
                             }{' '}
