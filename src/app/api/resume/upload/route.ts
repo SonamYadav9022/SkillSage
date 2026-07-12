@@ -19,7 +19,7 @@ cloudinary.config({
 
 const GROQ_URL = "https://api.groq.com/openai/v1/chat/completions";
 
-async function extractSkillsWithAI(resumeText: string) {
+async function extractSkillsWithAI(resumeText: string, attempt = 1): Promise<any> {
   const apiKey = process.env.GROQ_API_KEY;
   if (!apiKey || !resumeText?.trim()) return null;
 
@@ -60,18 +60,52 @@ ${resumeText.slice(0, 5000)}`;
         model: "openai/gpt-oss-120b",
         messages: [{ role: "user", content: prompt }],
         temperature: 0.1,
-        max_tokens: 1500,
+        max_tokens: 2000,
       }),
     });
+
+    if (!res.ok) {
+      const errBody = await res.text().catch(() => "");
+      console.error("[Resume AI] Groq API error:", res.status, errBody);
+      if (attempt < 2) {
+        console.log("[Resume AI] Retrying extraction, attempt", attempt + 1);
+        return extractSkillsWithAI(resumeText, attempt + 1);
+      }
+      return null;
+    }
 
     const data = await res.json();
     const raw = data.choices?.[0]?.message?.content ?? "";
     const clean = raw.replace(/```json\n?|```/g, "").trim();
-    const parsed = JSON.parse(clean);
+
+    let parsed;
+    try {
+      parsed = JSON.parse(clean);
+    } catch (parseErr) {
+      console.error("[Resume AI] JSON parse failed. Raw response:", raw.slice(0, 500));
+      if (attempt < 2) {
+        console.log("[Resume AI] Retrying extraction after parse failure, attempt", attempt + 1);
+        return extractSkillsWithAI(resumeText, attempt + 1);
+      }
+      return null;
+    }
+
+    if (!Array.isArray(parsed?.skills) || parsed.skills.length === 0) {
+      console.warn("[Resume AI] Extraction returned no skills.", parsed);
+      if (attempt < 2) {
+        console.log("[Resume AI] Retrying extraction due to empty skills, attempt", attempt + 1);
+        return extractSkillsWithAI(resumeText, attempt + 1);
+      }
+    }
+
     console.log("[Resume AI] Extracted", parsed.skills?.length, "skills:", parsed.skills?.slice(0, 5), "...");
     return parsed;
   } catch (err) {
     console.error("[Resume AI] Failed:", err);
+    if (attempt < 2) {
+      console.log("[Resume AI] Retrying extraction after exception, attempt", attempt + 1);
+      return extractSkillsWithAI(resumeText, attempt + 1);
+    }
     return null;
   }
 }
@@ -195,6 +229,10 @@ export async function POST(req: NextRequest) {
       ats,
       user,
       atsData: ats,
+      warning:
+        detectedSkills.length === 0
+          ? "We couldn't automatically extract skills from this resume. Please add them manually below, then continue."
+          : undefined,
     });
 
   } catch (error: any) {

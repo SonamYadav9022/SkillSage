@@ -283,11 +283,15 @@ const handleFileUpload = async (file: File) => {
         setGoal(goals[0]);
       }
 
-      setMsg(
-        `✓ Resume analyzed! Found ${extractedSkills.length} skills.`
-      );
-
-      setMsgType("success");
+      if (data.warning) {
+        setMsg(`⚠️ ${data.warning}`);
+        setMsgType("error");
+      } else {
+        setMsg(
+          `✓ Resume analyzed! Found ${extractedSkills.length} skills.`
+        );
+        setMsgType("success");
+      }
 
       onUpload({
         resume: fileData,
