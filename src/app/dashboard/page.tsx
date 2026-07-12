@@ -110,6 +110,20 @@ function DashboardContent() {
           await res.json()
 
         if (res.ok) {
+          /* ── ONBOARDING GUARD ──────────────────────────────────
+             Google sign-in creates an account with blank profile
+             fields (no education/skills/goal collected). If this
+             user never completed the onboarding questions, send
+             them there before showing the dashboard. */
+          const onboardingIncomplete =
+            !data.education?.trim() ||
+            !data.goal?.trim()
+
+          if (onboardingIncomplete) {
+            router.replace('/signup?mode=complete-profile')
+            return
+          }
+
           const skillsArray =
             typeof data.skills ===
             'string'
@@ -570,6 +584,7 @@ const savedData =
     </div>
   )
 }
+
 export default function Home() {
   return (
     <Suspense fallback={null}>

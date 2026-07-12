@@ -67,6 +67,12 @@ export async function POST(
               ? body.skills.join(',')
               : "",
 
+            goal:
+              body.goal || "",
+
+            currentLevel:
+              body.currentLevel || "",
+
             atsData:
               body.atsData || null,
                     },

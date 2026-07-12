@@ -1,10 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
-import { signIn } from "next-auth/react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { signIn, useSession } from "next-auth/react";
 
 // ── Data ────────────────────────────────────────────────────────────────────
 
@@ -140,11 +140,19 @@ const OTHER_VALUE = "__other__";
 
 // ── Component ────────────────────────────────────────────────────────────────
 
-export default function SignupPage() {
+function SignupPageContent() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const { data: session, status: sessionStatus } = useSession();
+
+  // "complete-profile" mode = an already-authenticated user (e.g. via
+  // Google) who never went through the onboarding questions. They skip
+  // straight to step 2 (age) since credentials already exist.
+  const completeProfileMode =
+    searchParams.get("mode") === "complete-profile";
 
   // Steps: 1=credentials, 2=age, 3=education, 4=domain, 5=skills, 6=goal, 7=level
-  const [step, setStep] = useState(1);
+  const [step, setStep] = useState(completeProfileMode ? 2 : 1);
   const [msg, setMsg] = useState("");
   const [loading, setLoading] = useState(false);
   const [checkingEmail, setCheckingEmail] = useState(false);
@@ -172,6 +180,31 @@ export default function SignupPage() {
 
   const set = (key: string, value: string) =>
     setForm((prev) => ({ ...prev, [key]: value }));
+
+  // Complete-profile mode requires an authenticated session (the user
+  // already signed up via Google). If they land here without one,
+  // send them to log in first.
+  useEffect(() => {
+    if (
+      completeProfileMode &&
+      sessionStatus === "unauthenticated"
+    ) {
+      router.replace("/login");
+    }
+  }, [completeProfileMode, sessionStatus, router]);
+
+  // Pre-fill name/email from the Google session so submitSignup has
+  // them available even though step 1 (credentials) is skipped.
+  useEffect(() => {
+    if (completeProfileMode && session?.user) {
+      setForm((prev) => ({
+        ...prev,
+        name: session.user!.name ?? prev.name,
+        email: session.user!.email ?? prev.email,
+      }));
+    }
+  }, [completeProfileMode, session]);
+
 
   const setOther = (key: keyof typeof otherInputs, value: string) =>
     setOtherInputs((prev) => ({ ...prev, [key]: value }));
@@ -339,6 +372,40 @@ export default function SignupPage() {
     setMsg("");
     setLoading(true);
 
+    const finalSkills = [...new Set(selectedSkills)];
+    const finalGoal = form.goal || levelValue;
+
+    // ── Complete-profile mode: account already exists (Google), so we
+    // update it directly instead of registering a new one. ──────────
+    if (completeProfileMode) {
+      try {
+        const res = await fetch("/api/user/update", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            name: form.name.trim(),
+            education: form.education,
+            goal: finalGoal,
+            currentLevel: levelValue,
+            skills: finalSkills,
+            manualSkills: finalSkills.join(", "),
+          }),
+        });
+
+        if (res.ok) {
+          router.replace("/dashboard");
+        } else {
+          const data = await res.json().catch(() => ({}));
+          setMsg(data.error || "Something went wrong. Please try again.");
+          setLoading(false);
+        }
+      } catch {
+        setMsg("Connection error. Please try again.");
+        setLoading(false);
+      }
+      return;
+    }
+
     const payload = {
       name: form.name.trim(),
       email: form.email.trim().toLowerCase(),
@@ -346,10 +413,10 @@ export default function SignupPage() {
       age: form.age,
       education: form.education,
       field: form.field,
-      goal: form.goal || levelValue,
+      goal: finalGoal,
       level: levelValue,
-      skills: [...new Set(selectedSkills)],
-      manualSkills: [...new Set(selectedSkills)].join(", "),
+      skills: finalSkills,
+      manualSkills: finalSkills.join(", "),
     };
 
     try {
@@ -385,7 +452,7 @@ export default function SignupPage() {
 
   const goBack = () => {
     setMsg("");
-    setStep((s) => Math.max(1, s - 1));
+    setStep((s) => Math.max(completeProfileMode ? 2 : 1, s - 1));
   };
 
   // ── Render ─────────────────────────────────────────────────────────────────
@@ -898,5 +965,13 @@ export default function SignupPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function SignupPage() {
+  return (
+    <Suspense fallback={null}>
+      <SignupPageContent />
+    </Suspense>
   );
 }
