@@ -298,12 +298,12 @@ export default function GlobalChatbot() {
       {/* CHAT WINDOW */}
 
       {open && (
-        <div className="fixed bottom-20 right-5 z-50 w-[380px] h-[600px] bg-white rounded-3xl shadow-2xl border flex flex-col overflow-hidden">
+        <div className="fixed bottom-20 right-5 z-50 w-[380px] h-[600px] bg-white dark:bg-neutral-900 rounded-3xl shadow-2xl border border-gray-200 dark:border-neutral-700 flex flex-col overflow-hidden">
 
           {/* HEADER */}
 
-          <div className="p-4 border-b flex justify-between items-center bg-white">
-            <h2 className="font-bold text-blue-600 text-lg">
+          <div className="p-4 border-b border-gray-200 dark:border-neutral-700 flex justify-between items-center bg-white dark:bg-neutral-900">
+            <h2 className="font-bold text-blue-600 dark:text-blue-400 text-lg">
               SkillSage AI
             </h2>
 
@@ -311,7 +311,7 @@ export default function GlobalChatbot() {
               onClick={() =>
                 setOpen(false)
               }
-              className="text-2xl text-gray-500 hover:text-gray-800"
+              className="text-2xl text-gray-500 dark:text-neutral-400 hover:text-gray-800 dark:hover:text-neutral-200"
             >
               ×
             </button>
@@ -319,7 +319,7 @@ export default function GlobalChatbot() {
 
           {/* MESSAGES */}
 
-          <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-gray-50">
+          <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-gray-50 dark:bg-neutral-950">
 
             {messages.map(
               (msg, i) => (
@@ -337,7 +337,7 @@ export default function GlobalChatbot() {
                       msg.type ===
                       'user'
                         ? 'bg-blue-600 text-white'
-                        : 'bg-white border text-gray-800'
+                        : 'bg-white dark:bg-neutral-800 border border-gray-200 dark:border-neutral-700 text-gray-800 dark:text-neutral-100'
                     }`}
                   >
                     {msg.text}
@@ -348,7 +348,7 @@ export default function GlobalChatbot() {
 
             {loading && (
               <div className="flex justify-start">
-                <div className="bg-white border px-4 py-3 rounded-2xl text-sm text-gray-500">
+                <div className="bg-white dark:bg-neutral-800 border border-gray-200 dark:border-neutral-700 px-4 py-3 rounded-2xl text-sm text-gray-500 dark:text-neutral-400">
                   Thinking...
                 </div>
               </div>
@@ -359,7 +359,7 @@ export default function GlobalChatbot() {
 
           {/* INPUT */}
 
-          <div className="p-3 border-t flex items-center gap-2 bg-white">
+          <div className="p-3 border-t border-gray-200 dark:border-neutral-700 flex items-center gap-2 bg-white dark:bg-neutral-900">
 
             {/* INPUT + MIC */}
 
@@ -381,7 +381,7 @@ export default function GlobalChatbot() {
                   )
                     sendMessage()
                 }}
-                className="w-full border rounded-xl px-4 py-2 pr-12 outline-none text-sm"
+                className="w-full border border-gray-300 dark:border-neutral-600 rounded-xl px-4 py-2 pr-12 outline-none text-sm bg-white dark:bg-neutral-800 text-gray-900 dark:text-neutral-100 placeholder:text-gray-400 dark:placeholder:text-neutral-500"
                 disabled={loading}
               />
 
@@ -392,8 +392,8 @@ export default function GlobalChatbot() {
                 onClick={handleMic}
                 className={`absolute right-3 top-1/2 -translate-y-1/2 transition ${
                   isListening
-                    ? 'text-blue-600'
-                    : 'text-gray-500'
+                    ? 'text-blue-600 dark:text-blue-400'
+                    : 'text-gray-500 dark:text-neutral-400'
                 }`}
               >
                 <Mic className="w-5 h-5" />
