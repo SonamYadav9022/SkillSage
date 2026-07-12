@@ -361,10 +361,22 @@ const handleFileUpload = async (file: File) => {
     if (onReset) onReset();
   };
 
-const viewFile = () => {
-  const url =
+const viewFile = async () => {
+  let url =
     uploadedFile?.url ||
     savedData?.resumeUrl
+
+  // Local state can be stale right after a reload/tab switch — do one
+  // fresh fetch before giving up, instead of failing immediately.
+  if (!url) {
+    try {
+      const res = await fetch("/api/user/me")
+      const data = await res.json()
+      url = data?.resumeUrl || ""
+    } catch (err) {
+      console.error("[Resume] Failed to fetch resumeUrl for preview:", err)
+    }
+  }
 
   if (!url) {
     setMsg("Resume preview unavailable.")

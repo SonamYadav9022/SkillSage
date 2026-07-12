@@ -1,3 +1,72 @@
+// ── Skill name normalization ──────────────────────────────────────
+// The resume-extraction AI call and the required-skills AI call are
+// two independent generations, so they can word the same skill
+// differently ("GitHub" vs "Git", "JS" vs "JavaScript", "Node" vs
+// "Node.js"). Exact string matching after that causes false "missing
+// skill" results even when the user clearly has the skill. This map
+// normalizes common variants to one canonical form before comparing.
+const SKILL_ALIASES: Record<string, string> = {
+  git: "git", github: "git", gitlab: "git", "version control": "git",
+
+  js: "javascript", javascript: "javascript", "es6": "javascript",
+  ts: "typescript", typescript: "typescript",
+
+  node: "nodejs", "node.js": "nodejs", nodejs: "nodejs",
+  react: "react", "react.js": "react", reactjs: "react",
+  next: "nextjs", "next.js": "nextjs", nextjs: "nextjs",
+  vue: "vuejs", "vue.js": "vuejs", vuejs: "vuejs",
+  angular: "angular", angularjs: "angular",
+
+  postgres: "postgresql", postgresql: "postgresql", psql: "postgresql",
+  mongo: "mongodb", mongodb: "mongodb",
+  mysql: "mysql",
+
+  py: "python", python: "python",
+  "c sharp": "csharp", "c#": "csharp", csharp: "csharp",
+  "c plus plus": "cpp", "c++": "cpp", cpp: "cpp",
+
+  aws: "aws", "amazon web services": "aws",
+  gcp: "gcp", "google cloud": "gcp", "google cloud platform": "gcp",
+  azure: "azure", "microsoft azure": "azure",
+
+  docker: "docker", kubernetes: "kubernetes", k8s: "kubernetes",
+  "ci/cd": "cicd", cicd: "cicd", "ci cd": "cicd",
+
+  "rest api": "restapi", "rest apis": "restapi", "restful api": "restapi",
+  "rest api design": "restapi", api: "restapi",
+
+  "spring boot": "springboot", springboot: "springboot", spring: "springboot",
+
+  html: "html", "html5": "html",
+  css: "css", "css3": "css",
+
+  sql: "sql",
+  "machine learning": "ml", ml: "ml",
+  "deep learning": "dl", dl: "dl",
+  nlp: "nlp", "natural language processing": "nlp",
+
+  linux: "linux", unix: "linux", bash: "bash", shell: "bash",
+}
+
+function normalizeSkill(raw: string): string {
+  const cleaned = raw.toLowerCase().trim()
+  return SKILL_ALIASES[cleaned] ?? cleaned
+}
+
+// Two skill names are considered the same if, after normalization,
+// they're identical OR one contains the other as a whole word (catches
+// cases like "React" vs "React Native" being treated as distinct,
+// while "Docker" vs "Docker Compose" still correctly matches "Docker").
+function skillsMatch(a: string, b: string): boolean {
+  const na = normalizeSkill(a)
+  const nb = normalizeSkill(b)
+  if (na === nb) return true
+  if (na.length >= 3 && nb.length >= 3) {
+    if (na.includes(nb) || nb.includes(na)) return true
+  }
+  return false
+}
+
 // Pure scoring function — takes an already-resolved list of required
 // skills (usually generated dynamically by AI, see groq-skills.ts) and
 // compares it against the user's extracted skills.
@@ -6,18 +75,12 @@ export function computeATSScore(
   requiredSkills: string[]
 ) {
   const matchedSkills = userSkills.filter((userSkill) =>
-    requiredSkills.some(
-      (requiredSkill) =>
-        requiredSkill.toLowerCase().trim() === userSkill.toLowerCase().trim()
-    )
+    requiredSkills.some((requiredSkill) => skillsMatch(userSkill, requiredSkill))
   )
 
   const missingSkills = requiredSkills.filter(
     (requiredSkill) =>
-      !userSkills.some(
-        (userSkill) =>
-          userSkill.toLowerCase().trim() === requiredSkill.toLowerCase().trim()
-      )
+      !userSkills.some((userSkill) => skillsMatch(userSkill, requiredSkill))
   )
 
   const score =
