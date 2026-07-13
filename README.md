@@ -1,7 +1,7 @@
 # 🚀 SkillSage – AI-Powered Adaptive Career Roadmap Generator
 
 <p align="center">
-  <img src="assets/banner.png" alt="SkillSage Banner" width="100%">
+  <img src="assets/banner.png" alt="SkillSage Banner" width="95%">
 </p>
 
 <p align="center">
@@ -21,7 +21,7 @@
 
 ## 🌐 Live Demo
 
-🔗 **Live Website:** https://your-vercel-link.vercel.app
+🔗 **Live Website:** https://skill-sage-sand.vercel.app/
 
 ## 💻 GitHub Repository
 
