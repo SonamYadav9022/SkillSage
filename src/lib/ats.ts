@@ -74,8 +74,13 @@ export function computeATSScore(
   userSkills: string[],
   requiredSkills: string[]
 ) {
-  const matchedSkills = userSkills.filter((userSkill) =>
-    requiredSkills.some((requiredSkill) => skillsMatch(userSkill, requiredSkill))
+  // IMPORTANT: iterate over requiredSkills (not userSkills) so the count
+  // can never exceed requiredSkills.length — otherwise multiple resume
+  // skills fuzzy-matching the same required skill (e.g. "MySQL" AND
+  // "MySQL Workbench" both matching required "SQL") would inflate the
+  // match count past 100%.
+  const matchedSkills = requiredSkills.filter((requiredSkill) =>
+    userSkills.some((userSkill) => skillsMatch(userSkill, requiredSkill))
   )
 
   const missingSkills = requiredSkills.filter(

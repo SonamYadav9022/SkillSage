@@ -171,9 +171,9 @@ export async function POST(req: NextRequest) {
     const analysis = await extractSkillsWithAI(resumeText);
 
     const detectedSkills: string[] = analysis?.skills ?? [];
-    const currentLevel: string = analysis?.level ?? "Beginner";
-    const experience: string = analysis?.experience ?? existingUser?.experience ?? "Fresher";
-    const education: string = analysis?.education ?? existingUser?.education ?? "";
+    const currentLevel: string = (analysis?.level?.trim() || existingUser?.currentLevel) ?? "Beginner";
+    const experience: string = (analysis?.experience?.trim() || existingUser?.experience) ?? "Fresher";
+    const education: string = (analysis?.education?.trim() || existingUser?.education) ?? "";
     const careerGoalForScoring: string =
       existingUser?.goal ||
       analysis?.suggestedGoals?.[0] ||

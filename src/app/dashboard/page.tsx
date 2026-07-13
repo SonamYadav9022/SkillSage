@@ -112,12 +112,13 @@ function DashboardContent() {
         if (res.ok) {
           /* ── ONBOARDING GUARD ──────────────────────────────────
              Google sign-in creates an account with blank profile
-             fields (no education/skills/goal collected). If this
-             user never completed the onboarding questions, send
-             them there before showing the dashboard. */
-          const onboardingIncomplete =
-            !data.education?.trim() ||
-            !data.goal?.trim()
+             fields. If this user never completed the onboarding
+             questions, send them there before showing the dashboard.
+             We check `goal` only — it's set exclusively during
+             onboarding and never touched by any other route (unlike
+             `education`, which is intentionally refreshed on every
+             resume upload and would make this check unreliable). */
+          const onboardingIncomplete = !data.goal?.trim()
 
           if (onboardingIncomplete) {
             router.replace('/signup?mode=complete-profile')
