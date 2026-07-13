@@ -517,7 +517,7 @@ function SignupPageContent() {
 
           {/* Error */}
           {msg && (
-            <div className="mb-5 px-4 py-3 rounded-xl bg-red-50 border border-red-100 text-red-600 text-sm text-center">
+            <div className="mb-5 px-4 py-3 rounded-xl bg-red-50 dark:bg-red-950/40 border border-red-100 text-red-600 text-sm text-center">
               {msg}
             </div>
           )}
@@ -637,7 +637,7 @@ function SignupPageContent() {
                 <button
                   key={edu.value}
                   onClick={() => handleEducation(edu.value)}
-                  className={`w-full flex items-center gap-4 px-5 py-4 rounded-2xl border-2 text-left transition-all duration-200 hover:border-blue-400 hover:bg-blue-50 dark:bg-blue-950/40 ${
+                  className={`w-full flex items-center gap-4 px-5 py-4 rounded-2xl border-2 text-left transition-all duration-200 hover:border-blue-400 hover:bg-blue-50 dark:hover:bg-blue-950/40 ${
                     form.education === edu.value
                       ? "border-blue-600 bg-blue-50 dark:bg-blue-950/40"
                       : "border-gray-200 dark:border-neutral-700 bg-white dark:bg-neutral-900"
@@ -654,7 +654,7 @@ function SignupPageContent() {
               {/* OTHER */}
               <button
                 onClick={() => handleEducation(OTHER_VALUE)}
-                className={`w-full flex items-center gap-4 px-5 py-4 rounded-2xl border-2 text-left transition-all duration-200 hover:border-blue-400 hover:bg-blue-50 dark:bg-blue-950/40 ${
+                className={`w-full flex items-center gap-4 px-5 py-4 rounded-2xl border-2 text-left transition-all duration-200 hover:border-blue-400 hover:bg-blue-50 dark:hover:bg-blue-950/40 ${
                   form.education === OTHER_VALUE
                     ? "border-blue-600 bg-blue-50 dark:bg-blue-950/40"
                     : "border-gray-200 dark:border-neutral-700 bg-white dark:bg-neutral-900"
@@ -701,7 +701,7 @@ function SignupPageContent() {
                   <button
                     key={domain}
                     onClick={() => handleDomain(domain)}
-                    className={`w-full flex items-center gap-4 px-5 py-3.5 rounded-2xl border-2 text-left transition-all duration-200 hover:border-blue-400 hover:bg-blue-50 dark:bg-blue-950/40 ${
+                    className={`w-full flex items-center gap-4 px-5 py-3.5 rounded-2xl border-2 text-left transition-all duration-200 hover:border-blue-400 hover:bg-blue-50 dark:hover:bg-blue-950/40 ${
                       form.field === domain
                         ? "border-blue-600 bg-blue-50 dark:bg-blue-950/40"
                         : "border-gray-200 dark:border-neutral-700 bg-white dark:bg-neutral-900"
@@ -718,7 +718,7 @@ function SignupPageContent() {
                 {/* OTHER */}
                 <button
                   onClick={() => handleDomain(OTHER_VALUE)}
-                  className={`w-full flex items-center gap-4 px-5 py-3.5 rounded-2xl border-2 text-left transition-all duration-200 hover:border-blue-400 hover:bg-blue-50 dark:bg-blue-950/40 ${
+                  className={`w-full flex items-center gap-4 px-5 py-3.5 rounded-2xl border-2 text-left transition-all duration-200 hover:border-blue-400 hover:bg-blue-50 dark:hover:bg-blue-950/40 ${
                     form.field === OTHER_VALUE
                       ? "border-blue-600 bg-blue-50 dark:bg-blue-950/40"
                       : "border-gray-200 dark:border-neutral-700 bg-white dark:bg-neutral-900"
@@ -770,7 +770,7 @@ function SignupPageContent() {
                     className={`px-4 py-2 rounded-full text-sm font-medium border-2 transition-all duration-200 ${
                       selectedSkills.includes(skill)
                         ? "bg-blue-600 border-blue-600 text-white shadow-md"
-                        : "bg-white dark:bg-neutral-900 border-gray-200 dark:border-neutral-700 text-gray-700 dark:text-neutral-300 hover:border-blue-300 hover:bg-blue-50 dark:bg-blue-950/40"
+                        : "bg-white dark:bg-neutral-900 border-gray-200 dark:border-neutral-700 text-gray-700 dark:text-neutral-300 hover:border-blue-300 hover:bg-blue-50 dark:hover:bg-blue-950/40"
                     }`}
                   >
                     {selectedSkills.includes(skill) ? "✓ " : ""}{skill}
@@ -816,7 +816,7 @@ function SignupPageContent() {
                 <button
                   key={g.value}
                   onClick={() => handleGoal(g.value)}
-                  className={`relative w-full flex flex-col gap-0.5 px-5 py-4 rounded-2xl border-2 text-left transition-all duration-200 hover:border-blue-400 hover:bg-blue-50 dark:bg-blue-950/40 ${
+                  className={`relative w-full flex flex-col gap-0.5 px-5 py-4 rounded-2xl border-2 text-left transition-all duration-200 hover:border-blue-400 hover:bg-blue-50 dark:hover:bg-blue-950/40 ${
                     form.goal === g.value
                       ? "border-blue-600 bg-blue-50 dark:bg-blue-950/40"
                       : "border-gray-200 dark:border-neutral-700 bg-white dark:bg-neutral-900"
@@ -833,7 +833,7 @@ function SignupPageContent() {
               {/* OTHER */}
               <button
                 onClick={() => handleGoal(OTHER_VALUE)}
-                className={`relative w-full flex flex-col gap-0.5 px-5 py-4 rounded-2xl border-2 text-left transition-all duration-200 hover:border-blue-400 hover:bg-blue-50 dark:bg-blue-950/40 ${
+                className={`relative w-full flex flex-col gap-0.5 px-5 py-4 rounded-2xl border-2 text-left transition-all duration-200 hover:border-blue-400 hover:bg-blue-50 dark:hover:bg-blue-950/40 ${
                   form.goal === OTHER_VALUE
                     ? "border-blue-600 bg-blue-50 dark:bg-blue-950/40"
                     : "border-gray-200 dark:border-neutral-700 bg-white dark:bg-neutral-900"
@@ -887,7 +887,7 @@ function SignupPageContent() {
                     <button
                       key={level.value}
                       onClick={() => handleLevel(level.value)}
-                      className={`w-full flex items-start gap-4 px-5 py-5 rounded-2xl border-2 text-left transition-all duration-200 hover:border-blue-400 hover:bg-blue-50 dark:bg-blue-950/40 ${
+                      className={`w-full flex items-start gap-4 px-5 py-5 rounded-2xl border-2 text-left transition-all duration-200 hover:border-blue-400 hover:bg-blue-50 dark:hover:bg-blue-950/40 ${
                         form.level === level.value
                           ? "border-blue-600 bg-blue-50 dark:bg-blue-950/40"
                           : "border-gray-200 dark:border-neutral-700 bg-white dark:bg-neutral-900"
@@ -904,7 +904,7 @@ function SignupPageContent() {
                   {/* OTHER */}
                   <button
                     onClick={() => handleLevel(OTHER_VALUE)}
-                    className={`w-full flex items-start gap-4 px-5 py-5 rounded-2xl border-2 text-left transition-all duration-200 hover:border-blue-400 hover:bg-blue-50 dark:bg-blue-950/40 ${
+                    className={`w-full flex items-start gap-4 px-5 py-5 rounded-2xl border-2 text-left transition-all duration-200 hover:border-blue-400 hover:bg-blue-50 dark:hover:bg-blue-950/40 ${
                       form.level === OTHER_VALUE
                         ? "border-blue-600 bg-blue-50 dark:bg-blue-950/40"
                         : "border-gray-200 dark:border-neutral-700 bg-white dark:bg-neutral-900"

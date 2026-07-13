@@ -128,7 +128,7 @@ export default function RoadmapDisplay({ roadmap, onStartLearning }: Props) {
               </div>
               <div className="flex flex-wrap gap-2">
                 {roadmap.currentSkills.map((skill: string, i: number) => (
-                  <Badge key={i} className="bg-green-50 text-green-800 border border-green-200 px-3 py-1">
+                  <Badge key={i} className="bg-green-50 dark:bg-green-950/40 text-green-800 border border-green-200 px-3 py-1">
                     ✓ {skill}
                   </Badge>
                 ))}
@@ -261,7 +261,7 @@ export default function RoadmapDisplay({ roadmap, onStartLearning }: Props) {
                   </h3>
                   <div className="flex flex-wrap gap-3">
                     {milestone.certifications.map((cert: string, i: number) => (
-                      <Badge key={i} className="bg-yellow-50 text-yellow-900 border border-yellow-200 px-3 py-1">{cert}</Badge>
+                      <Badge key={i} className="bg-yellow-50 dark:bg-yellow-950/40 text-yellow-900 border border-yellow-200 px-3 py-1">{cert}</Badge>
                     ))}
                   </div>
                 </div>

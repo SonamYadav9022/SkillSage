@@ -491,9 +491,9 @@ const viewFile = async () => {
              <div
                className={`mt-4 flex items-start gap-2 text-sm p-3 rounded-lg ${
                  msgType === "success"
-                   ? "bg-green-50 text-green-700"
+                   ? "bg-green-50 dark:bg-green-950/40 text-green-700"
                    : msgType === "error"
-                   ? "bg-red-50 text-red-700"
+                   ? "bg-red-50 dark:bg-red-950/40 text-red-700"
                    : "bg-blue-50 dark:bg-blue-950/40 text-blue-700 dark:text-blue-300"
                }`}
              >
@@ -509,7 +509,7 @@ const viewFile = async () => {
 {atsData && (
   <div className="mt-5">
 
-    <Card className="border-green-200 bg-green-50 shadow-none">
+    <Card className="border-green-200 bg-green-50 dark:bg-green-950/40 shadow-none">
       <CardContent className="p-5 space-y-4">
 
         {/* TOP */}

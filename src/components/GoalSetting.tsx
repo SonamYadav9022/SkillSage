@@ -202,7 +202,7 @@ export default function GoalSetting({
       </div>
 
       {error && (
-        <div className="px-4 py-3 rounded-xl bg-red-50 border border-red-100 text-red-600 text-sm">
+        <div className="px-4 py-3 rounded-xl bg-red-50 dark:bg-red-950/40 border border-red-100 text-red-600 text-sm">
           {error}
         </div>
       )}
@@ -310,25 +310,25 @@ export default function GoalSetting({
 
       </div>
 
-      <div className="bg-white dark:bg-neutral-900 rounded-3xl border p-8">
+      <div className="bg-white dark:bg-neutral-900 rounded-3xl border border-gray-200 dark:border-neutral-700 p-8">
 
-        <h2 className="text-2xl font-bold mb-6">
+        <h2 className="text-2xl font-bold mb-6 text-gray-900 dark:text-neutral-100">
           Generate Career Roadmap
         </h2>
 
-        <div className="bg-slate-100 rounded-2xl p-6 mb-6 space-y-2">
+        <div className="bg-slate-100 dark:bg-neutral-800 rounded-2xl p-6 mb-6 space-y-2">
 
-          <p className="text-lg">
+          <p className="text-lg text-gray-900 dark:text-neutral-100">
             <b>Goal:</b>{" "}
             {goal || "Not set"}
           </p>
 
-          <p className="text-lg">
+          <p className="text-lg text-gray-900 dark:text-neutral-100">
             <b>Timeline:</b>{" "}
             {selectedDuration || "Not Selected"}
           </p>
 
-          <p className="text-lg">
+          <p className="text-lg text-gray-900 dark:text-neutral-100">
             <b>Weekly Commitment:</b>{" "}
             {selectedWeeklyHours || "Not Selected"}
           </p>
