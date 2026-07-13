@@ -210,30 +210,51 @@ Dashboard
 
 # 📸 Screenshots
 
-| Landing Page |
-|--------------|
-| Add Screenshot |
+## 🏠 Landing Page
 
-| Dashboard |
-|-----------|
-| Add Screenshot |
+<p align="center">
+<img src="screenshots/landing-page.png" width="900">
+</p>
 
-| Resume Analysis |
-|----------------|
-| Add Screenshot |
+---
 
-| Career Roadmap |
-|---------------|
-| Add Screenshot |
+## 📊 Dashboard
 
-| ATS Analysis |
-|--------------|
-| Add Screenshot |
+<p align="center">
+<img src="screenshots/dashboard.png" width="900">
+</p>
 
-| AI Chat |
-|---------|
-| Add Screenshot |
+---
 
+## 📄 Resume Analysis
+
+<p align="center">
+<img src="screenshots/resume-analysis.png" width="900">
+</p>
+
+---
+
+## 🎯 Career Roadmap
+
+<p align="center">
+<img src="screenshots/roadmap.png" width="900">
+</p>
+
+---
+
+## 📈 ATS Score Analysis
+
+<p align="center">
+<img src="screenshots/ats-score.png" width="900">
+</p>
+
+---
+
+## 🤖 AI Career Assistant
+
+<p align="center">
+<img src="screenshots/chatbot.png" width="900">
+</p>
 ---
 
 # 🚀 Future Enhancements
@@ -252,9 +273,9 @@ Dashboard
 
 | Contributor | Role | Key Contributions |
 |-------------|------|-------------------|
-| **Sonam Yadav** | **Project Initiator • Full Stack Developer • Backend & AI Integration** | Project architecture, Backend development, AI integration (Groq), Authentication (NextAuth & Google OAuth), PostgreSQL & Prisma integration, Dynamic ATS scoring, Career roadmap generation, Deployment on Vercel, Core feature development & ongoing maintenance |
-| **Chetana** | **Full Stack Developer • UI/UX, Backend & Feature Development** | ATS score enhancements, Resume upload & preview improvements, Cloudinary integration, AI chatbot refinements, UI/UX improvements, Bug fixes & feature enhancements |
-| **Sakshi** | **Full Stack Developer • Development Support & Testing** | Initial project setup, dark mode implementation, Repository management, Merge conflict resolution, Testing & development support |
+| **Sonam Yadav** | **Full Stack Developer • Backend & AI Integration** | Project architecture, Backend development, AI integration (Groq), Authentication (NextAuth & Google OAuth), PostgreSQL & Prisma integration, ATS score improvement, Career roadmap generation, Deployment on Vercel, Core feature development & ongoing maintenance |
+| **Chetana Ingle** | **Full Stack Developer • UI/UX, Backend & Feature Development** | ATS score enhancements, Resume upload & preview improvements, Cloudinary integration, AI chatbot refinements, UI/UX improvements, Bug fixes & feature enhancements |
+| **Sakshi Nimsadkar** | **Full Stack Developer • Development Support & Testing** | Initial project setup, dark mode implementation, Repository management, Merge conflict resolution, Testing & development support |
 
 ---
 
